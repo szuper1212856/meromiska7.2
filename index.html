@@ -133,7 +133,7 @@ function cloud(c,x,y,s,col){c.fillStyle=col;[[0,0,1],[-.9,.25,.7],[.9,.25,.75],[
 function stars(c,n,a,seed){const r=rng(seed);c.fillStyle='#fff8e0';for(let i=0;i<n;i++){const x=r()*W,y=r()*H*.6,s=r()*1.6+.4;c.globalAlpha=a*(.4+.6*r());c.fillRect(x,y,s,s)}c.globalAlpha=1}
 function text(c,s,x,y,size,col,font=FD,align='center',alpha=1,weight=''){if(alpha<=0)return;c.save();c.globalAlpha*=alpha;c.font=`${weight} ${size}px ${font}`;c.textAlign=align;c.textBaseline='middle';c.fillStyle=col;c.fillText(s,x,y);c.restore()}
 function panel(c,x,y,w,h,a=1){if(a<=0)return;c.save();c.globalAlpha*=a;c.shadowColor='rgba(0,0,0,.35)';c.shadowBlur=18;c.shadowOffsetY=6;c.fillStyle='rgba(246,234,208,.95)';rr(c,x,y,w,h,10);c.fill();c.shadowColor='transparent';c.strokeStyle='#8a6a3a';c.lineWidth=2;rr(c,x+5,y+5,w-10,h-10,7);c.stroke();c.restore()}
-function bubble(c,x,y,s,a){if(a<=0)return;c.save();c.globalAlpha*=a;c.font=`600 24px ${FB}`;const w=c.measureText(s).width+34,h=46;const k=.8+.2*Math.min(1,a*1.4);c.translate(x,y);c.scale(k,k);c.fillStyle='rgba(250,242,222,.97)';rr(c,-w/2,-h,w,h,14);c.fill();c.beginPath();c.moveTo(-8,-2);c.lineTo(4,16);c.lineTo(10,-2);c.fill();c.strokeStyle='#6b4e2a';c.lineWidth=2;rr(c,-w/2,-h,w,h,14);c.stroke();c.fillStyle='#3a2614';c.textAlign='center';c.textBaseline='middle';c.fillText(s,0,-h/2);c.restore()}
+function bubble(c,x,y,s,a){if(a<=0)return;c.save();c.globalAlpha*=a;c.font=`600 24px ${FB}`;const w=c.measureText(s).width+34,h=46;const k=.8+.2*Math.min(1,a*1.4);x=clamp(x,w/2+14,W-w/2-14);c.translate(x,y);c.scale(k,k);c.fillStyle='rgba(250,242,222,.97)';rr(c,-w/2,-h,w,h,14);c.fill();c.beginPath();c.moveTo(-8,-2);c.lineTo(4,16);c.lineTo(10,-2);c.fill();c.strokeStyle='#6b4e2a';c.lineWidth=2;rr(c,-w/2,-h,w,h,14);c.stroke();c.fillStyle='#3a2614';c.textAlign='center';c.textBaseline='middle';c.fillText(s,0,-h/2);c.restore()}
 function heart(c,x,y,s){c.beginPath();c.moveTo(x,y+s*.3);c.bezierCurveTo(x,y,x-s*.5,y,x-s*.5,y+s*.3);c.bezierCurveTo(x-s*.5,y+s*.6,x,y+s*.8,x,y+s);c.bezierCurveTo(x,y+s*.8,x+s*.5,y+s*.6,x+s*.5,y+s*.3);c.bezierCurveTo(x+s*.5,y,x,y,x,y+s*.3);c.fill()}
 function crown(c,x,y,a=1,s=1){if(a<=0)return;c.save();c.globalAlpha*=a;c.translate(x,y);c.scale(s,s);c.fillStyle='#e6b847';c.beginPath();c.moveTo(-11,4);c.lineTo(-12,-7);c.lineTo(-6,-1);c.lineTo(0,-10);c.lineTo(6,-1);c.lineTo(12,-7);c.lineTo(11,4);c.closePath();c.fill();c.fillStyle='#b8323a';c.beginPath();c.arc(0,0,2.2,0,TAU);c.fill();c.restore()}
 function sparkle(c,x,y,r,a,col='#ffe9a8'){if(a<=0)return;c.save();c.globalAlpha*=a;c.fillStyle=col;c.beginPath();c.moveTo(x,y-r);c.quadraticCurveTo(x,y,x+r,y);c.quadraticCurveTo(x,y,x,y+r);c.quadraticCurveTo(x,y,x-r,y);c.quadraticCurveTo(x,y,x,y-r);c.fill();c.restore()}
@@ -430,7 +430,8 @@ A.dance=(c,t)=>{sky(c,['#1a1640','#3a2a5a','#6a3a50']);stars(c,120,.6,12);c.fill
   for(let i=0;i<10;i++){const a=i/10*TAU+t*.8,x=640+Math.cos(a)*440,y=600+Math.sin(a)*70;ds.push({y,f:()=>person(c,{skin:'#e3b08c',hair:i===3?'#a4522a':i===6?'#1f1a16':['#3a2a1e','#6a3a1f','#2a1a12'][i%3],shirt:cols[i],vest:i%3===0?'#2a1a12':null,pants:'#2e2a26',dress:i%2&&i!==3?cols[(i+3)%10]:null,hairStyle:i%2&&i!==3?'long':null,trim:'#efe5cf',x,y,h:120+(y-530)*.6,walk:1,phase:t*7+i,dir:Math.sin(a)>0?-1:1,armF:2.4,armB:-2.4,smile:1})})}
   const ca=t*2.2;ds.push({y:600+Math.sin(ca)*14,f:()=>person(c,{...MISKA_FEST,x:640+Math.cos(ca)*40,y:600+Math.sin(ca)*14,h:175,dir:Math.cos(ca)<0?1:-1,armF:1.3,bob:Math.sin(t*8)*3,smile:1})});ds.push({y:600-Math.sin(ca)*14,f:()=>person(c,{...BRIDE,x:640-Math.cos(ca)*40,y:600-Math.sin(ca)*14,h:170,dir:Math.cos(ca)<0?-1:1,armF:1.3,sway:Math.sin(t*6)*6,smile:1})});
   ds.push({y:700,f:()=>{const sw=Math.sin(t*3)*24;person(c,{...MASTER,x:1085+sw,y:700,h:150,dir:-1,armF:1.3,smile:1});person(c,{...GATE,x:1025+sw,y:700,h:140,dir:1,armF:1.3,smile:1});c.fillStyle='rgba(240,110,130,.9)';heart(c,1052+sw,500-mod(t*40,80),16)}});
-  ds.push({y:500,f:()=>{[[60,BRO1],[125,BRO2],[195,POCOK],[262,SZOCSKE]].forEach(([x,P])=>person(c,{...P,x,y:500,h:96,dir:1,armF:1.1}));c.strokeStyle='#e0b456';c.lineWidth=2;c.beginPath();c.moveTo(76,436);c.lineTo(246,436);c.stroke()}});
+  ds.push({y:500,f:()=>{[[60,BRO1],[125,BRO2],[195,POCOK],[262,RAVEN]].forEach(([x,P])=>person(c,{...P,x,y:500,h:96,dir:1,armF:1.1}));c.strokeStyle='#e0b456';c.lineWidth=2;c.beginPath();c.moveTo(76,436);c.lineTo(246,436);c.stroke()}});
+  ds.push({y:705,f:()=>{const sw=Math.sin(t*3.4+1)*20;person(c,{...SZOCSKE,x:260+sw,y:705,h:170,dir:1,armF:1.3,smile:1});person(c,{...PANNI,x:325+sw,y:705,h:160,dir:-1,armF:1.3,smile:1});c.fillStyle='rgba(240,110,130,.9)';heart(c,292+sw,490-mod(t*40,80),16)}});
   ds.sort((a,b)=>a.y-b.y).forEach(d=>d.f());
   for(let s=0;s<2;s++){const y0=40+s*50;c.strokeStyle='rgba(40,30,30,.8)';c.lineWidth=2;c.beginPath();c.moveTo(0,y0);c.quadraticCurveTo(W/2,y0+90,W,y0);c.stroke();for(let i=1;i<14;i++){const k=i/14,x=k*W,y=y0+90*2*k*(1-k)+4+Math.sin(t*2+i)*2;glow(c,x,y,24,'rgba(255,200,110,.9)',.6);c.fillStyle=['#ffcf7a','#ff8a6a','#9ad8ff'][i%3];c.beginPath();c.arc(x,y,6,0,TAU);c.fill()}}
   const r=rng(31);for(let i=0;i<40;i++){const x=r()*W,y=mod(r()*H+t*(40+r()*30),H);c.fillStyle=cols[i%10];c.save();c.translate(x,y);c.rotate(t*3+i);c.fillRect(-4,-2,8,4);c.restore()}};
@@ -442,8 +443,8 @@ A.end=(c,t)=>{const g=c.createRadialGradient(W/2,H/2,40,W/2,H/2,760);g.addColorS
   text(c,L('Itt a vége, fuss el véle!','And that is the end of the tale!'),W/2,505,56,'#f3e2b6',FD,'center',sm(4,5,t),'900');text(c,L('VÉGE','THE END'),W/2,580,28,'#cdb68a',FU,'center',sm(5.5,6.5,t),'600');
   for(let i=0;i<12;i++){const r=rng(i+90);sparkle(c,r()*W,r()*H,4+r()*4,.5+.5*Math.sin(t*2+i*1.7))}};
 
-A.credits=(c,t,m,sh)=>{c.fillStyle='#0e0a06';c.fillRect(0,0,W,H);const lines=[['Mérő Miska',64,FD,'#f3e2b6','900'],['',30],[L('Tóth István: Mérő Miska történetei nyomán','After “Mérő Miska történetei” by István Tóth'),26,FB,'#e9d6ad'],['',40],[L('ILLUSZTRÁCIÓK','ILLUSTRATIONS'),18,FU,'#c9a35a','600'],[L('a „Mérő Miska próbái” alkalmazás képei (meromiska7.1)','from the “Mérő Miska próbái” app (meromiska7.1)'),26,FB,'#e9d6ad'],['',30],[L('ANIMÁCIÓ · ZENE · VÁGÁS','ANIMATION · MUSIC · EDITING'),18,FU,'#c9a35a','600'],['Claude',28,FB,'#e9d6ad'],['',40],[L('SZEREPLŐK','CAST'),18,FU,'#c9a35a','600'],[L('Mérő Miska · a legkisebb fiú','Mérő Miska · the youngest son'),24,FB,'#e9d6ad'],[L('A révész · a király álruhában','The ferryman · the king in disguise'),24,FB,'#e9d6ad'],[L('Ilona · a gyógyító lány, a királylány','Ilona · the healer, the princess'),24,FB,'#e9d6ad'],[L('Az órásmester','The clockmaker'),24,FB,'#e9d6ad'],[L('A tűz és jég kapuőre','The keeper of the Fire and Ice gate'),24,FB,'#e9d6ad'],[L('A két hencegő báty','The two boastful brothers'),24,FB,'#e9d6ad'],[L('A Fekete Holló · a rablóbanda feje','The Black Raven · leader of the robber gang'),24,FB,'#e9d6ad'],[L('Pocok és Szöcske · a Holló segédei','Vole and Grasshopper · the Raven’s henchmen'),24,FB,'#e9d6ad'],['',30],[L('A rablóbanda, a vihar, az üldözés és a lánykérés','The robber gang, the storm, the chase and the proposal'),20,FU,'#c9a35a','600'],[L('új mellékszál a film kedvéért','a new side story written for the film'),22,FB,'#e9d6ad'],['',50],[L('TANULSÁG','MORAL'),18,FU,'#c9a35a','600'],[L('Előbb mérj, aztán beszélj.','Measure first, then speak.'),40,FD,'#f3e2b6','900']];
-  let y=H+20-t*((H+1450)/sh.dur);lines.forEach(([s,sz,f,col,wt])=>{y+=sz*1.6;if(s&&y>-50&&y<H+50)text(c,s,W/2,y,sz,col,f,'center',1,wt||'')})};
+A.credits=(c,t,m,sh)=>{c.fillStyle='#0e0a06';c.fillRect(0,0,W,H);const lines=[['Mérő Miska',64,FD,'#f3e2b6','900'],['',30],[L('Tóth István: Mérő Miska történetei nyomán','After “Mérő Miska történetei” by István Tóth'),26,FB,'#e9d6ad'],['',40],[L('ILLUSZTRÁCIÓK','ILLUSTRATIONS'),18,FU,'#c9a35a','600'],[L('a „Mérő Miska próbái” alkalmazás képei (meromiska7.1)','from the “Mérő Miska próbái” app (meromiska7.1)'),26,FB,'#e9d6ad'],['',30],[L('ANIMÁCIÓ · ZENE · VÁGÁS','ANIMATION · MUSIC · EDITING'),18,FU,'#c9a35a','600'],['Claude',28,FB,'#e9d6ad'],['',40],[L('SZEREPLŐK','CAST'),18,FU,'#c9a35a','600'],[L('Mérő Miska · a legkisebb fiú','Mérő Miska · the youngest son'),24,FB,'#e9d6ad'],[L('A révész · a király álruhában','The ferryman · the king in disguise'),24,FB,'#e9d6ad'],[L('Ilona · a gyógyító lány, a királylány','Ilona · the healer, the princess'),24,FB,'#e9d6ad'],[L('Az órásmester','The clockmaker'),24,FB,'#e9d6ad'],[L('A tűz és jég kapuőre','The keeper of the Fire and Ice gate'),24,FB,'#e9d6ad'],[L('A két hencegő báty','The two boastful brothers'),24,FB,'#e9d6ad'],[L('A Fekete Holló · a rablóbanda feje','The Black Raven · leader of the robber gang'),24,FB,'#e9d6ad'],[L('Pocok · a Holló segédje','Vole · the Raven’s henchman'),24,FB,'#e9d6ad'],[L('Szöcske · a zsebmetsző, aki megjavult','Grasshopper · the pickpocket who changed his ways'),24,FB,'#e9d6ad'],[L('Panni · a gyógyító sátor segédje','Panni · the healer’s helper'),24,FB,'#e9d6ad'],['',30],[L('A rablóbanda, Szöcske és Panni, a vihar, az üldözések és a lánykérés','The robber gang, Grasshopper and Panni, the storm, the chases and the proposal'),20,FU,'#c9a35a','600'],[L('új mellékszál a film kedvéért','a new side story written for the film'),22,FB,'#e9d6ad'],['',50],[L('TANULSÁG','MORAL'),18,FU,'#c9a35a','600'],[L('Előbb mérj, aztán beszélj.','Measure first, then speak.'),40,FD,'#f3e2b6','900']];
+  let y=H+20-t*((H+1560)/sh.dur);lines.forEach(([s,sz,f,col,wt])=>{y+=sz*1.6;if(s&&y>-50&&y<H+50)text(c,s,W/2,y,sz,col,f,'center',1,wt||'')})};
 
 /* ---------- cinematic helpers ---------- */
 const fz=(t,a,b)=>t<a?t:t<b?a:t-(b-a);
@@ -527,7 +528,7 @@ A.storm1=(c,t)=>{const fl=strike(t,[1.1,4.6,7.8]);c.save();shake(c,3+fl*8,t);sto
   const fy=520+Math.sin(t*1.7)*12;ferryBoat(c,880,fy,Math.sin(t*1.7+.6)*.07,()=>{barrel(c,-120,-8,46,58);person(c,{...FERRY,x:90,y:-10,h:140,dir:-1,armF:1.2,armB:.9,noShadow:1});person(c,{...MISKA,x:-20,y:-6,h:126,dir:-1,armF:t>5.5?1.3:.3,shout:t>5.5&&t<7,noShadow:1})});
   waves(c,t,560,22,'rgba(18,32,50,.94)',2.2,1.4);waves(c,t,625,18,'rgba(12,22,38,.97)',2.6,2.8);
   rain(c,t,240,.9);c.restore();flash(c,fl*.55,'225,232,255');
-  bubble(c,gx+110,330,L('„Add ide a hordókat, révész!”','“Hand over the barrels, ferryman!”'),sm(5,5.4,t)*(1-sm(8.4,8.8,t)))};
+  bubble(c,gx+110,330,L('„Süllyesszétek el a kompot!”','“Sink that ferry!”'),sm(5,5.4,t)*(1-sm(8.4,8.8,t)))};
 A.storm2=(c,t)=>{const CR=7.2,fl=strike(t,[.5,CR]);c.save();shake(c,3+fl*9+(t>CR&&t<CR+.8?10:0),t);stormSky(c,t);
   [[.5,900,5],[CR,260,9]].forEach(([b,x,sd])=>{if(t>=b&&t<b+.3)bolt(c,x,sd,1-(t-b)/.3)});
   waves(c,t,470,24,'#16243a',1.6);
@@ -652,7 +653,7 @@ A.snore=(c,t)=>{forestNight(c,t);campfire(c,440,650,t,.5);tiedTree(c,700);
 function clockGang(c,t){if(t<4.6)return;const a=sm(4.6,5.2,t);c.save();c.globalAlpha=a;
   c.fillStyle=RAVEN.hat;c.beginPath();c.ellipse(1140,712,26,5,0,0,TAU);c.fill();c.fillRect(1128,703,24,8);
   person(c,{...RAVEN,hat:null,x:1172,y:712-Math.abs(Math.sin(t*9))*14,h:140,dir:-1,armF:2.5,armB:-2.5,shout:1});
-  person(c,{...POCOK,x:1075,y:712,h:118,dir:1,bow:.3});person(c,{...SZOCSKE,x:1245,y:712,h:132,dir:-1,bow:.3});c.restore();
+  person(c,{...POCOK,x:1075,y:712,h:118,dir:1,bow:.3});c.restore();
   bubble(c,1172,520,L('„Grrr!”','“Grrr!”'),sm(5.4,5.7,t)*(1-sm(7.5,7.8,t)))}
 
 /* ---------- fire & ice comeuppance ---------- */
@@ -662,11 +663,11 @@ A.gangPaths=(c,t)=>{fireIceBG(c,t);
   person(c,{...RAVEN,x:rx,y:ry,h:190,dir:-1,walk:t<1.8?1:0,phase:t*8,stride:1.3,armF:t>1.8?2.7:null,armB:t>1.8?-2.7:null,shout:t>1.8});
   if(t>1.8)for(let i=0;i<6;i++){const k=mod(t*1.5+i/6,1);c.fillStyle=`rgba(90,90,90,${.5*(1-k)})`;c.beginPath();c.arc(rx+(i-3)*8,690-k*120,8+k*16,0,TAU);c.fill()}
   const sl=sm(3,6,t),slx=x0=>t<3?lerp(x0-80,x0,t/3):x0+Math.pow(sl,2)*(1180-x0);
-  if(t<6)[[POCOK,760,172],[SZOCSKE,850,190]].forEach(([Q,x0,h],i)=>{person(c,{...Q,x:slx(x0),y:t<3?688:688-Math.sin(sl*Math.PI)*20-sl*30,h,dir:1,walk:t<3?1:0,phase:t*6+i,rot:t<3?0:-.9-Math.sin(t*12+i)*.2,armF:t<3?null:2.7,armB:t<3?null:-2.7,shout:t>3})});
+  if(t<6)[[POCOK,780,172]].forEach(([Q,x0,h],i)=>{person(c,{...Q,x:slx(x0),y:t<3?688:688-Math.sin(sl*Math.PI)*20-sl*30,h,dir:1,walk:t<3?1:0,phase:t*6+i,rot:t<3?0:-.9-Math.sin(t*12+i)*.2,armF:t<3?null:2.7,armB:t<3?null:-2.7,shout:t>3})});
   if(t>2.9&&t<6)speedLines(c,t,.35,560,720);
   c.fillStyle='#f4f8fc';c.beginPath();c.ellipse(1190,690,130,60,0,Math.PI,TAU);c.fill();
   if(t>6){const k=t-6;if(k<.8)for(let i=0;i<20;i++){const a=-Math.PI*(i/19),v=140+(i%5)*30;c.fillStyle=`rgba(255,255,255,${1-k/.8})`;c.beginPath();c.arc(1190+Math.cos(a)*v*k,650+Math.sin(a)*v*k+200*k*k,8,0,TAU);c.fill()}
-    [[1150,POCOK],[1230,SZOCSKE]].forEach(([x,Q],i)=>{const w=Math.sin(t*10+i*2)*.25;c.strokeStyle=Q.pants;c.lineWidth=10;c.lineCap='round';[-8,8].forEach((d,j)=>{const fx=x+d+Math.sin(w+j)*14;c.beginPath();c.moveTo(x+d,648);c.lineTo(fx,582);c.stroke();c.fillStyle='#2b2118';c.beginPath();c.ellipse(fx,578,9,5,0,0,TAU);c.fill()})})}
+    [[1190,POCOK]].forEach(([x,Q],i)=>{const w=Math.sin(t*10+i*2)*.25;c.strokeStyle=Q.pants;c.lineWidth=10;c.lineCap='round';[-8,8].forEach((d,j)=>{const fx=x+d+Math.sin(w+j)*14;c.beginPath();c.moveTo(x+d,648);c.lineTo(fx,582);c.stroke();c.fillStyle='#2b2118';c.beginPath();c.ellipse(fx,578,9,5,0,0,TAU);c.fill()})})}
   bubble(c,rx,ry-230,L('„Áú! Áú! Forró!”','“Ow! Ow! Hot!”'),sm(2,2.3,t)*(1-sm(5.5,5.8,t)))};
 
 /* ---------- the throne room twist ---------- */
@@ -680,12 +681,12 @@ A.throneTwist=(c,t)=>{c.save();shake(c,t>1.4&&t<2.1?8:0,t);hall(c,t);
   person(c,{...RAVEN,feather:'#3a3a3a',x:gx,y:670,h:200,dir:-1,walk:walking?1:0,phase:t*5,armF:.2});
   for(let i=0;i<5;i++){const k=mod(t*.8+i/5,1);c.fillStyle=`rgba(60,60,60,${.45*(1-k)})`;c.beginPath();c.arc(gx-10+(i-2)*12,460-k*80,8+k*14,0,TAU);c.fill()}
   const point=t>5.6;
-  person(c,{...FROZE(POCOK),x:jit(gx+130),y:676,h:170,dir:-1,walk:walking?1:0,phase:t*5,armF:point?1.55:.3,shout:point});icicles(c,gx+130,676-170*.86);
-  person(c,{...FROZE(SZOCSKE),x:jit(gx+230),y:684,h:186,dir:-1,walk:walking?1:0,phase:t*5+1,armF:.3});icicles(c,gx+230,684-186*.86);
-  person(c,{...GUARD,x:gx+330,y:684,h:190,dir:-1,walk:walking?1:0,phase:t*5});c.strokeStyle='#6a4a2a';c.lineWidth=4;c.beginPath();c.moveTo(gx+300,690);c.lineTo(gx+310,420);c.stroke();c.fillStyle='#c8c8d0';c.beginPath();c.moveTo(gx+304,424);c.lineTo(gx+316,388);c.lineTo(gx+320,428);c.fill();
+  person(c,{...FROZE(POCOK),x:jit(gx+130),y:676,h:170,dir:-1,walk:walking?1:0,phase:t*5,armF:.3});icicles(c,gx+130,676-170*.86);
+  person(c,{...GUARD,x:gx+240,y:684,h:190,dir:-1,walk:walking?1:0,phase:t*5});c.strokeStyle='#6a4a2a';c.lineWidth=4;c.beginPath();c.moveTo(gx+210,690);c.lineTo(gx+220,420);c.stroke();c.fillStyle='#c8c8d0';c.beginPath();c.moveTo(gx+214,424);c.lineTo(gx+226,388);c.lineTo(gx+230,428);c.fill();
+  person(c,{...SZOCSKE,x:gx+350,y:684,h:192,dir:-1,walk:walking?1:0,phase:t*5+1,armF:point?1.55:.4,shout:point});person(c,{...PANNI,x:gx+440,y:686,h:172,dir:-1,walk:walking?1:0,phase:t*5+2,armF:.3,smile:1});
   c.restore();
-  if(t>4.2&&t<5.8)text(c,'brrr…',gx+250,450,24,'#cfe8ff',FD,'center',.9,'700');
-  bubble(c,gx+130,430,L('„Ők fizettek nekünk!”','“They paid us!”'),sm(5.8,6.1,t))};
+  if(t>4.2&&t<5.8)text(c,'brrr…',gx+150,450,24,'#cfe8ff',FD,'center',.9,'700');
+  bubble(c,gx+350,420,L('„Ők fizettek nekünk!”','“They paid us!”'),sm(5.8,6.1,t))};
 
 /* ---------- the proposal ---------- */
 A.proposal=(c,t,m)=>{sky(c,['#2c2050','#a8507a','#ec9a60','#f8cf8a']);sun(c,640,470,60,'rgba(255,190,120,1)','#ffd89a');stars(c,60,sm(6,10,t)*.7,21);
@@ -700,6 +701,121 @@ A.proposal=(c,t,m)=>{sky(c,['#2c2050','#a8507a','#ec9a60','#f8cf8a']);sun(c,640,
   for(let i=0;i<16;i++){const r=rng(i+60),st=7.6+r()*3,p=clamp((t-st)/3,0,1);if(p<=0||p>=1)continue;c.fillStyle=`rgba(240,110,130,${(1-p)*.9})`;heart(c,650+(r()-.5)*240,460-p*280,14+r()*12)}
   bubble(c,720,380,L('„Igen!”','“Yes!”'),sm(6.6,6.9,t)*(1-sm(9.5,9.9,t)))};
 
+/* ---------- v4: side couple, climax, deeper romance ---------- */
+const PANNI={skin:'#f0c4a0',hair:'#b8501e',hairStyle:'long',shirt:'#efe5cf',dress:'#7a3050',scarf:'#e8c860',trim:'#efe5cf'};
+function ladle(c,x,y,rot){c.save();c.translate(x,y);c.rotate(rot);c.strokeStyle='#8a8a92';c.lineWidth=4;c.beginPath();c.moveTo(0,0);c.lineTo(0,-46);c.stroke();c.fillStyle='#a8a8b2';c.beginPath();c.arc(0,-52,11,0,Math.PI);c.fill();c.restore()}
+function streetFloor(c){c.fillStyle='#9a8466';c.fillRect(0,600,W,120);c.strokeStyle='rgba(60,40,20,.25)';c.lineWidth=2;for(let x=0;x<W+60;x+=60){c.beginPath();c.moveTo(x,600);c.lineTo(x-40,720);c.stroke()}}
+function riseHearts(c,t,x,y,n,seed,t0,spread=120){for(let i=0;i<n;i++){const r=rng(seed+i),st=t0+r()*3,p=clamp((t-st)/2.6,0,1);if(p<=0||p>=1)continue;c.fillStyle=`rgba(240,110,130,${(1-p)*.9})`;heart(c,x+(r()-.5)*spread+Math.sin(t*2+i)*8,y-p*200,10+r()*10)}}
+
+A.caught=(c,t)=>{marketBG(c,t);streetFloor(c);
+  [[300,680],[360,694],[460,676],[980,690],[1040,700]].forEach(([x,y])=>{c.fillStyle='#c0392b';c.beginPath();c.arc(x,y,10,0,TAU);c.fill()});
+  const sx=560,smit=t>4.6;
+  person(c,{...SZOCSKE,x:sx,y:744,h:170,dir:1,rot:1.57,armF:2.9,armB:2.9,noShadow:1,smile:smit,bow:smit?-.5:0});
+  c.fillStyle='#f6f2ea';[0,1,2].forEach(k=>c.fillRect(690+k*8,650+Math.sin(t*6+k)*2,6,16));
+  const wrap=t<4.2;person(c,{...PANNI,x:sx-20,y:690,h:176,dir:1,kneel:1,armF:wrap?1.2+Math.sin(t*7)*.35:.6,armB:t>1&&t<4.4?2.7:.3,smile:t>4.4});
+  if(t>1&&t<4.4)ladle(c,sx-40,520,-.3+Math.sin(t*5)*.15);
+  person(c,{...MISKA,x:920,y:688,h:185,dir:-1,armF:.4,smile:1});person(c,{...GIRL,x:1010,y:688,h:178,dir:-1,armF:.3,smile:1});
+  if(smit)riseHearts(c,t,660,600,10,40,4.8,60);
+  nameCard(c,t,1.2,4,L('Panni','Panni'),L('a gyógyító sátor segédje – merőkanállal','the healer’s helper, armed with a ladle'),80,110,'#7a3050');
+  bubble(c,540,440,L('„Még egy mozdulat, és megismered a merőkanalamat!”','“One more move and you’ll meet my ladle!”'),sm(1,1.3,t)*(1-sm(4.3,4.6,t)));
+  bubble(c,680,520,L('„…Milyen gyönyörű.”','“…She’s beautiful.”'),sm(5.6,5.9,t))};
+
+A.ribbonDream=(c,t)=>{forestNight(c,t);
+  const k=sm(2,6,t),pts=[];for(let i=0;i<14;i++){const a=i/14*TAU,x=16*Math.pow(Math.sin(a),3),y=13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a);pts.push([640+x*9,200-y*9])}
+  c.strokeStyle=`rgba(255,230,180,${.5*k})`;c.lineWidth=1.5;c.beginPath();pts.forEach(([x,y],i)=>{if(i/14<=k){i?c.lineTo(x,y):c.moveTo(x,y)}});if(k>=1)c.closePath();c.stroke();pts.forEach(([x,y],i)=>sparkle(c,x,y,5,(i/14<=k?1:.3)*(.6+.4*Math.sin(t*3+i))));
+  c.save();c.globalAlpha=.22*sm(3,6,t);glow(c,960,330,260,'rgba(255,220,180,.8)',1);person(c,{...GIRL,x:960,y:540,h:380,dir:-1,smile:1,noShadow:1});c.restore();
+  campfire(c,540,650,t,.9);
+  person(c,{...MISKA,x:660,y:668,h:185,dir:-1,kneel:1,armF:1.3,bendF:-.4,bow:-.12-.12*sm(2,5,t),smile:1});
+  const hx=612,hy=588,sway=Math.sin(t*2)*6;c.lineCap='round';c.strokeStyle='#c0392b';c.lineWidth=5;c.beginPath();c.moveTo(hx,hy);c.quadraticCurveTo(hx-14,hy+22+sway,hx-4,hy+46);c.stroke();c.strokeStyle='#e0b456';c.lineWidth=1.5;c.stroke();
+  for(let i=0;i<14;i++){const p=mod(t*.4+i/14,1);sparkle(c,540+Math.sin(i*3+t)*30,640-p*320,3,(1-p)*.8,'#ffb050')}
+  nightTint(c,.18);glow(c,540,610,280,'rgba(255,140,60,.35)',.8);
+  text(c,L('„Visszamegyek érted.”','“I’ll come back for you.”'),940,120,30,'rgba(255,236,200,.95)',FB,'center',sm(6.5,7.5,t),'600')};
+
+A.szocskeTurn=(c,t)=>{forestNight(c,t);
+  c.fillStyle='#0a1020';c.beginPath();c.moveTo(900,480);c.quadraticCurveTo(1100,380,1320,480);c.fill();c.fillRect(1080,300,40,120);c.beginPath();c.moveTo(1074,300);c.lineTo(1100,262);c.lineTo(1126,300);c.fill();c.fillStyle='#f0d890';c.beginPath();c.arc(1100,332,9,0,TAU);c.fill();
+  const stop=t>1.6,mx=stop?lerp(560,520,sm(1.6,1.9,t)):lerp(380,560,t/1.6);
+  person(c,{...MISKA,x:mx,y:668,h:185,dir:1,walk:stop?0:1,phase:t*3,stride:.5,satchel:false,cord:true,shout:t>1.6&&t<2.4,armF:stop?(t>6.8&&t<7.8?1.3:.8):null,smile:t>8});
+  const sk=ease(sm(1.3,1.9,t));person(c,{...SZOCSKE,x:lerp(860,700,sk),y:684,h:195,dir:-1,armF:t>2.4&&t<4?2.5:t>4.3&&t<6.4?2.2:t>6.6&&t<7.6?1.4:.6,bendF:t>2.4&&t<4?-1.3:0,smile:t>8});
+  if(t>4.3&&t<6.6){c.setLineDash([8,8]);c.strokeStyle='rgba(255,240,200,.55)';c.lineWidth=2;c.beginPath();c.moveTo(720,470);c.quadraticCurveTo(900,340,1090,330);c.stroke();c.setLineDash([])}
+  if(t>6.6&&t<7.8){const k=sm(6.6,7.4,t),x=lerp(660,580,k),y=560-Math.sin(k*Math.PI)*30;c.strokeStyle='#c0392b';c.lineWidth=5;c.lineCap='round';c.beginPath();c.moveTo(x,y);c.quadraticCurveTo(x-10,y+18,x-2,y+36);c.stroke()}
+  nightTint(c,.26);
+  bubble(c,700,440,L('„Pszt! Nem árullak el.”','“Shh! I won’t give you away.”'),sm(2.4,2.7,t)*(1-sm(4,4.3,t)));
+  bubble(c,760,420,L('„A Holló a toronyórához ment!”','“The Raven went to the clock tower!”'),sm(4.3,4.6,t)*(1-sm(6.4,6.7,t)));
+  bubble(c,700,440,L('„Mondd meg Panninak…”','“Tell Panni…”'),sm(7.8,8.1,t));
+  if(t>8.4){c.fillStyle='rgba(240,110,130,.9)';heart(c,700,400-mod(t*30,40),14)}};
+
+A.escape=(c,t)=>{c.save();shake(c,(t>.9&&t<1.4)||(t>2.6&&t<3.3)?9:2,t);hall(c,t);
+  person(c,{...KING,x:640,y:462,h:150,dir:1,armF:t>1?2.4:.3,shout:t>1&&t<3.2});
+  const broke=t>2.7;c.fillStyle=broke?'#f2b878':'#a8c4dc';c.beginPath();c.moveTo(1110,560);c.lineTo(1110,320);c.quadraticCurveTo(1170,250,1230,320);c.lineTo(1230,560);c.fill();
+  if(!broke){c.strokeStyle='#5a3a24';c.lineWidth=5;c.beginPath();c.moveTo(1170,280);c.lineTo(1170,560);c.moveTo(1110,420);c.lineTo(1230,420);c.stroke()}
+  else{const k=t-2.7,r=rng(9);if(k<1.4)for(let i=0;i<22;i++){const a=-Math.PI*.9+r()*Math.PI*1.1,v=160+r()*260;c.save();c.translate(1170+Math.cos(a)*v*k,430+Math.sin(a)*v*k+300*k*k);c.rotate(k*6+i);c.fillStyle='rgba(210,230,250,.85)';c.beginPath();c.moveTo(0,-7);c.lineTo(6,6);c.lineTo(-6,5);c.fill();c.restore()}}
+  person(c,{...BRO1,x:170,y:650,h:175,dir:1,bow:.35});person(c,{...BRO2,x:255,y:655,h:172,dir:1,bow:.35});
+  const hop=t>.9&&t<2.6;person(c,{...GUARD,x:760,y:684-(hop?Math.abs(Math.sin(t*12))*20:0),h:190,dir:1,armF:hop?2.6:.4,shout:hop});
+  person(c,{...FROZE(POCOK),x:880+Math.sin(t*40)*2,y:676,h:170,dir:-1,armF:.3});
+  let rx=820,ry=670,rot=0;if(t>=.9&&t<1.6)rx=lerp(820,990,(t-.9)/.7);else if(t>=1.6&&t<2.7){const k=(t-1.6)/1.1;rx=lerp(990,1170,k);ry=670-Math.sin(k*Math.PI*.9)*230;rot=k*1.2}else if(t>=2.7){rx=1300;ry=420}
+  if(t<2.8)person(c,{...RAVEN,feather:'#3a3a3a',x:rx,y:ry,h:200,dir:1,walk:t>.9&&t<1.6?1:0,phase:t*12,stride:1.5,rot,armF:t>1.6?2.8:null,armB:t>1.6?-2.4:null,shout:t>.5});
+  const run=sm(3.4,5.6,t);person(c,{...MISKA,x:lerp(470,1120,run),y:665,h:200,dir:1,walk:t>3.4&&t<5.6?1:0,phase:t*12,stride:1.5,shout:t>3.4&&t<4.4});
+  person(c,{...PRINCESS,x:lerp(560,1000,sm(4.2,6.2,t)),y:668,h:192,dir:1,walk:t>4.2&&t<6.2?1:0,phase:t*11});
+  c.restore();if(t>2.7&&t<3.4)flash(c,.4*(1-(t-2.7)/.7));
+  bubble(c,860,390,L('„Engem senki sem fog el!”','“Nobody catches me!”'),sm(.3,.6,t)*(1-sm(2.4,2.7,t)));
+  bubble(c,640,430,L('„Utána!”','“After him!”'),sm(3.4,3.7,t)*(1-sm(5.4,5.7,t)))};
+
+function sunsetSky(c){sky(c,['#3a2050','#b05870','#f09a5a','#f8cf8a'])}
+A.wallChase=(c,t)=>{c.save();shake(c,2.2,t);const off=t*380;sunsetSky(c);sun(c,1000,420,56,'rgba(255,180,110,1)','#ffd89a');
+  ridge(c,430,60,'#6a4a68',2,off*.08);ridge(c,470,50,'#4a3452',5,off*.15);
+  c.fillStyle='#9a8a74';for(let x=-mod(off,120);x<W+120;x+=120)c.fillRect(x,440,70,72);c.fillRect(0,500,W,14);
+  c.fillStyle='#8a7a68';c.fillRect(0,514,W,206);
+  c.strokeStyle='rgba(60,40,30,.3)';c.lineWidth=2;for(let y=540;y<720;y+=36){c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();for(let x=-mod(off+(Math.floor(y/36)%2)*40,80);x<W;x+=80){c.beginPath();c.moveTo(x,y);c.lineTo(x,y+36);c.stroke()}}
+  for(let k=-1;k<3;k++){const px=(Math.floor(off/700)+k)*700-off+500;c.fillStyle='#4a3020';c.fillRect(px,200,10,320);c.fillStyle=mod(k+Math.floor(off/700),2)?'#2a5a3a':'#9a2232';c.beginPath();c.moveTo(px+10,210);c.lineTo(px+90+Math.sin(t*6+k)*8,240);c.lineTo(px+10,330);c.fill()}
+  const rx=lerp(920,1000,sm(0,9,t)),mx=lerp(380,620,sm(0,9,t)),ix=mx-170;
+  person(c,{...GUARD,x:ix-160,y:656,h:170,dir:1,walk:1,phase:t*12+2,stride:1.4});
+  person(c,{...PRINCESS,x:ix,y:652,h:172,dir:1,walk:1,phase:t*12,stride:1.2});
+  person(c,{...MISKA,x:mx,y:648,h:180,dir:1,walk:1,phase:t*13+1,stride:1.6,shout:t>3.4&&t<5.4});
+  person(c,{...RAVEN,feather:'#3a3a3a',x:rx,y:640,h:180,dir:1,walk:1,phase:t*13,stride:1.6,shout:t>1&&t<3.3});
+  c.fillStyle='rgba(40,30,30,.88)';for(let x=-mod(off*1.6,200);x<W+200;x+=200)c.fillRect(x,664,110,60);
+  speedLines(c,t,.35,150,620);c.restore();
+  bubble(c,rx,410,L('„Hahaha!”','“Ha ha ha!”'),sm(1,1.3,t)*(1-sm(3,3.3,t)));
+  bubble(c,mx,410,L('„Ilona, maradj hátul!”','“Ilona, stay back!”'),sm(3.4,3.7,t)*(1-sm(5.4,5.7,t)));
+  bubble(c,ix,430,L('„Eszem ágában sincs!”','“Not a chance!”'),sm(5.8,6.1,t)*(1-sm(8.4,8.7,t)))};
+
+A.lasso=(c,t)=>{sunsetSky(c);sun(c,1100,380,50,'rgba(255,180,110,1)','#ffd89a');
+  c.fillStyle='#5a4a52';c.fillRect(1120,160,160,500);c.beginPath();c.moveTo(1110,160);c.lineTo(1200,80);c.lineTo(1290,160);c.fill();c.fillStyle='#f2c878';[[1150,240],[1210,240],[1150,360],[1210,360]].forEach(([x,y])=>c.fillRect(x,y,20,34));
+  c.fillStyle='#9a8466';c.fillRect(0,650,W,70);
+  c.fillStyle='#8a7a68';c.fillRect(0,300,340,420);c.strokeStyle='rgba(60,40,30,.3)';c.lineWidth=2;for(let y=330;y<720;y+=36){c.beginPath();c.moveTo(0,y);c.lineTo(340,y);c.stroke()}
+  c.fillStyle='#9a8a74';for(let x=0;x<340;x+=70)c.fillRect(x,262,40,40);
+  c.fillStyle='#4a3020';c.fillRect(955,80,12,575);c.fillStyle='#9a2232';c.beginPath();c.moveTo(967,90);c.lineTo(1050+Math.sin(t*5)*8,110);c.lineTo(967,190);c.fill();
+  c.fillStyle='#8a8a92';c.beginPath();c.ellipse(760,668,130,22,0,0,TAU);c.fill();c.fillStyle='#7ab0d0';c.beginPath();c.ellipse(760,662,112,14,0,0,TAU);c.fill();c.fillStyle='#8a8a92';c.fillRect(752,600,16,60);
+  for(let i=0;i<8;i++){const p=mod(t*1.4+i/8,1);c.fillStyle=`rgba(200,230,250,${.7*(1-p)})`;c.beginPath();c.arc(760+(i-4)*6*p*4,600-Math.sin(p*Math.PI)*40,3,0,TAU);c.fill()}
+  const T=3.2,L0=360,PX=961,PY=90,th=.6*Math.cos(TAU*(t-4.2)/T+Math.PI),bx=PX+Math.sin(th)*L0,by=PY+Math.cos(th)*L0,drop=t>4.4;
+  c.strokeStyle='#d8c8a0';c.lineWidth=3;c.beginPath();c.moveTo(PX,PY);c.lineTo(bx,by);c.stroke();
+  if(t<1.4){c.save();c.setLineDash([6,8]);c.strokeStyle='rgba(255,240,200,.4)';c.lineWidth=1.5;c.beginPath();c.arc(PX,PY,L0,Math.PI/2-.6,Math.PI/2+.6);c.stroke();c.restore()}
+  let rvx=bx,rvy=by+196,rr2=0;if(drop){const k=clamp((t-4.4)/.8,0,1);rvx=757;rvy=lerp(582,700,k*k);rr2=k*.6}
+  if(t<5.2)person(c,{...RAVEN,feather:'#3a3a3a',x:rvx,y:rvy,h:160,dir:-1,armF:drop?2.6:3.05,armB:drop?-2.4:3,rot:drop?rr2:-th*.6,shout:drop,noShadow:1});
+  else{const by2=640+Math.sin(t*3)*3;c.fillStyle=RAVEN.skin;c.beginPath();c.arc(757,by2,13,0,TAU);c.fill();c.fillStyle=RAVEN.hat;c.save();c.translate(760,by2-14);c.rotate(.5);c.fillRect(-10,-14,20,14);c.fillRect(-18,-2,36,4);c.restore();for(let i=0;i<4;i++){const a=t*4+i*TAU/4;sparkle(c,757+Math.cos(a)*24,by2-26+Math.sin(a)*7,7,.9)}}
+  if(t>5.2&&t<6.2){const k=t-5.2;for(let i=0;i<22;i++){const a=-Math.PI*(i/21),v=150+(i%4)*45;c.fillStyle=`rgba(210,235,255,${1-k})`;c.beginPath();c.arc(760+Math.cos(a)*v*k,640+Math.sin(a)*v*k+400*k*k,5,0,TAU);c.fill()}}
+  const spin=t>3&&t<3.7,thr=t>=3.7;
+  person(c,{...PRINCESS,x:t<7.4?150:lerp(150,214,sm(7.4,8,t)),y:300,h:150,dir:1,armF:t>7.8?1.3:.3,smile:t>5.4});
+  person(c,{...MISKA,x:250,y:300,h:160,dir:1,armF:spin?2.9:thr&&t<4.6?1.5:t>7.8?1.3:t>1.2&&t<3?1.6:.4,shout:t>3.6&&t<4.4,smile:t>5.4});
+  if(spin){const a=t*16;c.strokeStyle='#d1aa5c';c.lineWidth=3;c.beginPath();c.ellipse(255,90,36,9,0,0,TAU);c.stroke()}
+  if(thr&&t<4.6){const k=sm(3.7,4.2,t),hx=290,hy=180,tx=757,ty=582;c.strokeStyle='#e0b456';c.lineWidth=3;c.beginPath();c.moveTo(hx,hy);c.quadraticCurveTo((hx+tx)/2,Math.min(hy,ty)-80,lerp(hx,tx,k),lerp(hy,ty,k));c.stroke();if(k>=1)sparkle(c,tx,ty,14,1)}
+  if(t>1.2&&t<3.4){const a=sm(1.2,1.6,t)*(1-sm(3,3.4,t));c.save();c.globalAlpha=a;c.setLineDash([10,8]);c.strokeStyle='#fff3c8';c.lineWidth=2;c.beginPath();c.moveTo(290,190);c.lineTo(757,520);c.stroke();c.restore();panel(c,420,90,420,110,a);text(c,L('távolság: 12 m · zsinór: 15 m ✓','distance: 12 m · cord: 15 m ✓'),630,128,24,'#3a2614',FB,'center',a,'600');text(c,L('dobás a holtpontban!','throw at the turning point!'),630,166,22,'#8a2a14',FD,'center',a*sm(2,2.4,t),'900')}
+  const pin=sm(6,6.8,t);if(t>6){person(c,{...PANNI,x:lerp(1320,860,pin),y:688,h:170,dir:-1,walk:pin<1?1:0,phase:t*10,armB:t>6.8?lerp(2.8,.8,sm(6.9,7.1,t)):2.6,smile:1});ladle(c,lerp(1320,860,pin)-4,560,t>6.9?lerp(-.4,-1.8,sm(6.9,7.1,t)):-.4)}
+  if(t>7.05&&t<7.8){text(c,'BONK!',780,560,40,'#fff3c8',FD,'center',1-sm(7.5,7.8,t),'900')}
+  if(t>7.6){person(c,{...GUARD,x:lerp(1350,1000,sm(7.6,8.4,t)),y:688,h:180,dir:-1,walk:t<8.4?1:0,phase:t*10})}
+  if(t>7.9)riseHearts(c,t,232,140,12,80,7.9,80)};
+
+function balconyBG(c,t){sunsetSky(c);sun(c,640,470,60,'rgba(255,190,120,1)','#ffd89a');ridge(c,500,50,'#5a3a5a',2,0);ridge(c,540,40,'#3e2a44',5,100);
+  c.fillStyle='#8a7258';c.fillRect(0,600,W,120);c.fillStyle='#a08a6c';c.fillRect(0,520,W,18);c.fillStyle='#7a6448';for(let x=20;x<W;x+=46){rr(c,x,538,22,62,8);c.fill()}c.fillStyle='#a08a6c';c.fillRect(0,596,W,12)}
+A.balconyTalk=(c,t)=>{balconyBG(c,t);
+  for(let i=0;i<5;i++){const k=t*.08+i*.2;ravenBird(c,mod(200+k*900,W+200)-100,180+Math.sin(t+i)*20+i*14,.45,t*8+i,'#3a2a3a')}
+  const close=sm(6,9,t);
+  person(c,{...MISKA_FEST,x:lerp(570,600,close),y:690,h:200,dir:1,armF:lerp(.3,1.2,sm(8.6,9.6,t)),bow:t<5?.12:0,smile:t>6});
+  person(c,{...PRINCESS,x:lerp(720,690,close),y:690,h:194,dir:-1,armF:lerp(.3,1.2,sm(8.6,9.6,t)),bow:t>5&&t<8?.08:0,smile:1});
+  if(t>9.4){glow(c,645,560,90,'rgba(255,230,180,.9)',sm(9.4,9.8,t))}
+  riseHearts(c,t,645,500,10,120,9.6,160);
+  bubble(c,600,380,L('„Én csak egy szegény fiú vagyok…”','“I’m just a poor boy…”'),sm(1,1.3,t)*(1-sm(4.6,4.9,t)));
+  bubble(c,700,380,L('„A szívem nem rangot mér.”','“My heart doesn’t measure rank.”'),sm(5.6,5.9,t)*(1-sm(9.6,9.9,t)))};
+
 /* ---------- shots ---------- */
 const S=[];
 const img=(k,dur,hu,en,o={})=>S.push({type:'img',img:k,dur,hu,en,...o});
@@ -708,8 +824,8 @@ const badge=(k,b,o={})=>S.push({type:'badge',img:k,dur:5,badge:b,hu:b[2],en:b[3]
 an('coldOpen',11,'Valahol a város egy sötét sikátorában két hencegő legény egy erszény aranyat nyomott egy rejtélyes idegen kezébe. „Az öcsénk nem érhet a várba!”','In a dark alley somewhere in town, two boastful young men pressed a purse of gold into a mysterious stranger’s hand. “Our little brother must not reach the castle!”',{mood:'villain',lb:1,chap:['Előhang','Prologue'],sfx:[[3.6,'chime'],[5,'whoosh'],[6.3,'chime']]});
 an('title',9,'','',{mood:'wonder',lb:1});
 img('cover',8,'Egyszer volt, hol nem volt, hetedhét országon is túl, élt egyszer egy szegény ember, s annak három fia.','Once upon a time, beyond seven times seven kingdoms, there lived a poor man with three sons.',{mood:'wonder',kb:{z0:1,z1:1.1,x0:.5,x1:.5,y0:.45,y1:.4}});
-img('herald',8,'Egy napon dobszó verte fel a falut: a király hírnöke azt hirdette, hogy az ország becsületes, okos embert keres.','One day a drumbeat woke the village: the king’s herald announced that the realm was looking for an honest, clever soul.',{mood:'market'});
-img('brothers',8,'A két nagyobbik fiú rögtön nekiiramodott. Hangosak voltak és gyorsak, de mérni sosem szerettek. Titokban pedig már gondoskodtak róla, hogy az öccsük ne járjon szerencsével.','The two older brothers dashed off at once. They were loud and fast, but they never cared for measuring. And in secret, they had already made sure their little brother would have no luck.',{mood:'journey'});
+img('herald',9,'Egy napon dobszó verte fel a falut. A király hírnöke kihirdette: aki kiállja az út próbáit, és eljut a várba, elnyerheti a királylány kezét. Ehhez azonban becsület és ész kell, nem erő.','One day a drumbeat woke the village. The king’s herald announced: whoever passes the trials of the road and reaches the castle may win the princess’s hand. But it would take honesty and brains, not strength.',{mood:'market'});
+img('brothers',8,'A két nagyobbik fiú rögtön nekiiramodott. Hangosak voltak és gyorsak, de mérni sosem szerettek. És mivel tudták, hogy az öccsük okosabb náluk, titokban már gondoskodtak róla, hogy ne érjen célba.','The two older brothers dashed off at once. They were loud and fast, but they never cared for measuring. And because they knew their little brother was smarter, they had secretly made sure he would never arrive.',{mood:'journey'});
 img('father',9,'A legkisebb, Miska, nem sietett. Apja a kezébe adta régi mérőzsinórját: „Fiam, ne a gyorsaságodat, hanem a pontosságodat mutasd meg.”','The youngest, Miska, took his time. His father handed him an old measuring cord: “Son, don’t show them how fast you are. Show them how precise you are.”',{mood:'wonder'});
 an('walk',8,'Miska vállára vetette tarisznyáját, és elindult szerencsét próbálni.','Miska slung his satchel over his shoulder and set off to seek his fortune.',{v:'morning',mood:'journey',chapter:['I.','A híd próbája','The Trial of the Bridge']});
 img('wanderer',8,'Ment, mendegélt, míg egy faluba nem ért, ahol olyan lárma volt, hogy még a tyúkok is abbahagyták a kapirgálást.','He walked and walked until he reached a village so noisy that even the hens forgot to scratch.',{mood:'journey'});
@@ -737,18 +853,21 @@ an('tentLove',8,'Miska akkor még nem tudta, miért dobog olyan hevesen a szíve
 an('theft',10,'Ám a tömegben egy hosszú, vékony kéz nyúlt a tarisznyája felé. Egy nyisszantás, és a tarisznya, benne a mérőzsinórral, eltűnt!','But in the crowd, a long, thin hand reached for his satchel. One snip, and the satchel, with the measuring cord inside, was gone!',{mood:'tense',sfx:[[3.1,'snip'],[4.2,'stamp'],[6.6,'whoosh']]});
 an('chase1',10,'Miska a tolvaj után vetette magát. Át a pultokon, fel a háztetőkre, kéménytől kéményig, a galambok is szétrebbentek előttük.','Miska threw himself after the thief. Over the stalls, up onto the rooftops, chimney to chimney, scattering the pigeons before them.',{mood:'action',lb:1,sfx:[[.2,'whoosh'],[2.3,'whoosh']]});
 an('chase2',10,'Ekkor egy kosár alma gurult a tolvaj lába elé. Szöcske hanyatt vágódott, a tarisznya a levegőbe repült, és Miska elkapta.','Then a basket of apples rolled under the thief’s feet. Grasshopper went flying, the satchel sailed into the air, and Miska caught it.',{mood:'action',lb:1,sfx:[[2.6,'boing'],[3,'whoosh'],[5.3,'chime'],[7,'poof']]});
+an('caught',10,'A zöld sátras lány segédje, Panni, ráült a tolvajra, és gézzel kötözte össze a kezét. Szöcske életében először nem a menekülésen törte a fejét, hanem Pannin.','The green-tent girl’s helper, Panni, sat right on the thief and tied his hands with a bandage. For the first time in his life, Grasshopper wasn’t thinking about escaping. He was thinking about Panni.',{mood:'comic',sfx:[[1.2,'stamp'],[5.3,'chime']]});
 an('romance1',10,'A kosarat a zöld sátras lány borította fel. „Ügyes vagy, mérő fiú” – nevetett. „Ilona vagyok.” Miska aznap már másodszor felejtett el levegőt venni.','It was the girl from the green tent who had tipped the basket. “Not bad, measuring boy,” she laughed. “I’m Ilona.” For the second time that day, Miska forgot to breathe.',{mood:'love',sfx:[[4.6,'chime']]});
 img('l3_03',10,'Ilonának még három dolog kellett: zsineg, kamilla és gyógyital. „Ne a szemednek higgy, és ne a kalmár szavának, csak annak, amit magad megmértél.”','Ilona still needed three things: twine, chamomile and a tonic. “Don’t trust your eyes or the merchant’s word. Trust only what you measure yourself.”',{mood:'market'});
 an('market',11,'Miska mindent háromszor mért meg, átlagot számolt, és a régi mértékeket átváltotta.','Miska measured everything three times, took the average and converted the old units.',{mood:'market',sfx:[[1.5,'stamp'],[5,'stamp'],[8.5,'stamp']]});
 img('l3_04',8,'„Ketten csaltak, egy pedig tisztességes volt. És ezt nem a szemem mondja, hanem a számok.”','“Two of them cheated, and one was honest. My eyes don’t say so. The numbers do.”',{mood:'wonder'});
-img('l3_05',9,'Megérkezett a vásárbíró. Végigolvasta Miska jegyzeteit, és bólintott: „Aki pontosan mér és számol, azt nem lehet becsapni.”','The market judge arrived, read Miska’s notes and nodded: “No one can fool a person who measures and calculates carefully.”',{mood:'wonder'});
+img('l3_05',9,'Megérkezett a vásárbíró. Végigolvasta Miska jegyzeteit, és bólintott: „Aki pontosan mér és számol, azt nem lehet becsapni.” Szöcske azonban még aznap kisurrant a pribékek keze közül.','The market judge arrived, read Miska’s notes and nodded: “No one can fool a person who measures carefully.” But that same day, Grasshopper slipped out of the guards’ hands.',{mood:'wonder'});
 img('l3_06',9,'Búcsúzóul Ilona hímzett szalagot kötött az útravalójára. A vásárbíró pedig figyelmeztette: „Vigyázz, fiam! A Holló emberei az erdőben várnak rád.”','As a farewell, Ilona tied an embroidered ribbon around his food bundle. And the market judge warned him: “Careful, son! The Raven’s men are waiting for you in the forest.”',{mood:'love'});
 badge('b_vas',['Vásári Éles Szem','Sharp Eye of the Market','A harmadik próba is teljesítve. Miska lett a Vásári Éles Szem.','The third trial is complete. Miska is now the Sharp Eye of the Market.'],{mood:'wonder'});
 an('walk',8,'Miska ment tovább, de a gondolatai újra meg újra Ilonához szálltak vissza. A fák között pedig három árnyék surrant utána.','Miska walked on, but his thoughts kept drifting back to Ilona. And between the trees, three shadows crept after him.',{v:'mountain',mood:'villain',shadows:1,chapter:['IV.','A toronyóra-készítő','The Clockmaker']});
-an('ambush1',11,'Éjszaka, a tábortűz mellett, egyszer csak suhogás hallatszott. Egy háló zuhant rá a magasból, és a sötétből előléptek a Holló emberei.','That night by the campfire, there was a sudden rustle. A net dropped on him from above, and the Raven’s men stepped out of the darkness.',{mood:'action',lb:1,sfx:[[3.3,'whoosh'],[3.85,'crash'],[4.4,'whoosh']]});
+an('ribbonDream',10,'Este a tábortűz mellett Miska Ilona szalagját forgatta. A csillagok között mintha az ő mosolyát látta volna. „Visszamegyek érted” – suttogta.','That evening by the campfire, Miska turned Ilona’s ribbon in his fingers. Among the stars he seemed to see her smile. “I’ll come back for you,” he whispered.',{mood:'love'});
+an('ambush1',11,'Hirtelen suhogás hallatszott. Egy háló zuhant rá a magasból, és a sötétből előlépett a Holló, Pocok és Szöcske.','Suddenly there was a rustle. A net dropped on him from above, and out of the darkness stepped the Raven, Vole and Grasshopper.',{mood:'action',lb:1,sfx:[[3.3,'whoosh'],[3.85,'crash'],[4.4,'whoosh']]});
 an('ambush2',11,'Fához kötözték, és a Holló elvette tőle a mérőzsinórt. „Most mérj, ha tudsz!” – kacagott, és Pocokra bízta a foglyot.','They tied him to a tree, and the Raven took his measuring cord. “Measure now, if you can!” he cackled, and left the prisoner with Vole.',{mood:'villain',lb:1});
 an('snore',14.5,'Pocok hamarosan elaludt. A horkolása egyenletes volt, mint egy inga: minden negyedik másodpercben. Miska kiszámolta a szüneteket, és a horkolások között, centiről centire, kibújt a kötélből. Aztán visszavette a zsinórját.','Vole soon fell asleep. His snoring was as steady as a pendulum: every fourth second. Miska timed the pauses, and between snores, inch by inch, he wriggled out of the ropes. Then he took back his cord.',{mood:'clock',lb:1,sfx:[[.05,'snore'],[4.05,'snore'],[8.05,'snore'],[12.05,'snore'],[12.5,'chime']]});
-img('l4_scene1',9,'Hajnalra a toronyórához ért. Az öreg órásmester jajveszékelt: valaki az éjjel eltörte az óra rugóját. A földön pedig egy fekete hollótoll hevert.','By dawn he reached the clock tower. The old clockmaker was in despair: someone had broken the clock’s spring in the night. And on the ground lay a black raven feather.',{mood:'tense'});
+an('szocskeTurn',10,'Ekkor egy kéz nehezedett a vállára. Szöcske volt az. „Nem árullak el. A Holló a toronyórához ment, hogy eltörje. Ha délben nem szól a harang, nem nyílik ki a vár kapuja.” Aztán halkan hozzátette: „Mondd meg Panninak, hogy megváltoztam.”','Then a hand landed on his shoulder. It was Grasshopper. “I won’t give you away. The Raven went to the clock tower to break it. If the bell doesn’t ring at noon, the castle gate won’t open.” Then he added quietly: “Tell Panni I’ve changed.”',{mood:'tense',lb:1,sfx:[[1.6,'stamp'],[7.4,'chime']]});
+img('l4_scene1',9,'Hajnalra a toronyórához ért, de elkésett: az óra rugója eltörve, a földön egy fekete hollótoll. Az órásmester jajveszékelt: „Ha délben nem szól a harang, a vár kapuja zárva marad!”','He reached the clock tower at dawn, but too late: the spring was broken, and a black raven feather lay on the ground. The clockmaker wailed: “If the bell doesn’t ring at noon, the castle gate stays shut!”',{mood:'tense'});
 img('l4_scene2',9,'„Egy fonálra kötött nehezék, egy lengő inga is méri az időt. Egyenletesen jár, akár a szívverés!”','“A weight on a string, a swinging pendulum, can measure time too. It keeps a steady beat, like a heartbeat!”',{mood:'clock'});
 img('l4_scene3',8,'Miska nem kapkodott. Előbb azt kellett kitapasztalni, mitől függ az inga lengése.','Miska didn’t rush. First they had to find out what the pendulum’s swing depends on.',{mood:'clock'});
 an('pendulum',12,'Kimért pontosan egy méter fonalat, megszámolt tíz teljes lengést, és az eltelt időt elosztotta tízzel.','He measured exactly one metre of string, counted ten full swings and divided the time by ten.',{mood:'clock',sfx:[[9.6,'chime']]});
@@ -764,19 +883,23 @@ img('l5_scene3',9,'„Látod? A kéz hazudik. Ez az üvegcső nem.” Csakhogy n
 an('thermo',11,'Két biztos pont kellett: az olvadó jég lett a nulla, a forrásban lévő víz a száz, a kettő közé pedig száz egyenlő rész.','He needed two fixed points: melting ice became zero, boiling water became a hundred, with a hundred equal steps between.',{mood:'mystic',sfx:[[3,'stamp'],[6.4,'stamp']]});
 img('l5_scene4',9,'A forró ösvény fölé valaki ezt véste: 122 °F. A jeges fölé ezt: 253 K. Lehet a jég melegebb a gőznél?','Above the hot path someone had carved: 122 °F. Above the icy one: 253 K. Could ice be warmer than steam?',{mood:'tense'});
 an('convert',12,'Miska mindent átszámolt a saját skálájára. A forró út 50 °C, a jeges −20 °C. A gázló vize viszont 293 K: kellemes 20 °C.','Miska converted everything to his own scale. The hot path: 50 °C. The icy one: −20 °C. But the ford read 293 K: a pleasant 20 °C.',{mood:'tense',sfx:[[2.2,'stamp'],[6.2,'stamp'],[10.3,'chime']]});
-an('gangPaths',11,'Ekkor utolérte a banda. „Mérés? Ugyan!” – kiáltotta a Holló, és rálépett a forró ösvényre. Pocok és Szöcske a jegeset választották. Hát… ők sem mértek.','Just then the gang caught up. “Measuring? Nonsense!” cried the Raven, and stepped onto the hot path. Vole and Grasshopper chose the icy one. Well… they didn’t measure either.',{mood:'comic',sfx:[[1.9,'sizzle'],[2.5,'boing'],[3.3,'slide'],[3.6,'boing'],[4.6,'boing'],[6,'poof']]});
+an('gangPaths',11,'Ekkor utolérte őket a Holló és Pocok. „Mérés? Ugyan!” – kiáltotta a Holló, és rálépett a forró ösvényre. Pocok a jegeset választotta. Hát… ő sem mért.','Just then the Raven and Vole caught up. “Measuring? Nonsense!” cried the Raven, and stepped onto the hot path. Vole chose the icy one. Well… he didn’t measure either.',{mood:'comic',sfx:[[1.9,'sizzle'],[2.5,'boing'],[3.3,'slide'],[3.6,'boing'],[4.6,'boing'],[6,'poof']]});
 img('l5_scene5',8,'Tűz és jég között Miska átkelt a gázlón. „Te nem tapogattál, hanem mértél” – mondta a kapuőr.','Between fire and ice, Miska waded across the ford. “You didn’t fumble about. You measured,” said the gatekeeper.',{mood:'journey'});
 img('l5_scene6',10,'A várkapuban ott várta Ilona, aranybrokát köpenyben. Mindkét kezét Miska kérges tenyerébe tette: „Végre megérkeztél!”','At the castle gate Ilona was waiting, now in a cloak of golden brocade. She placed both hands in Miska’s: “At last, you’re here!”',{mood:'love'});
 an('fever',11,'„Apám, a király, lázas. A nyugati orvos műszere 101,3 °F-et mutat. Mennyi ez a mi fokunk szerint?”','“My father, the king, has a fever. The western doctor’s instrument reads 101.3 °F. What is that on our scale?”',{mood:'tense',chapter:['VI.','Kézfogó','The Betrothal'],sfx:[[7.2,'stamp'],[9.5,'chime']]});
-an('throne',10,'„38,5 °C. Láz, de nem veszélyes” – mondta Miska. A király elmosolyodott, és Miska ráismert: a révész arca volt.','“38.5 °C: a fever, but not a dangerous one,” said Miska. The king smiled, and Miska recognised the ferryman’s face.',{mood:'love'});
-an('throneTwist',12,'Ekkor kivágódott az ajtó. Az őrök behozták a megpörkölődött Hollót és a két csontig fagyott segédjét. Pocok vacogva a bátyákra mutatott: „Ők fizettek nekünk!”','Just then the doors burst open. The guards dragged in the singed Raven and his two frozen henchmen. Shivering, Vole pointed at the brothers: “They paid us!”',{mood:'tense',sfx:[[1.4,'crash'],[5.8,'stamp']]});
-an('throne',11,'A király megcsóválta a fejét. A bandát és a két bátyát egy évre a vásárbíróhoz küldte, pontosan mérni. Miskához pedig így szólt: „Te nem csaltál, nem hencegtél. Áldásom rátok!”','The king shook his head. He sent the gang and the two brothers to the market judge for a year, to measure precisely. And to Miska he said: “You never cheated, you never boasted. You have my blessing!”',{mood:'love',t0:10,sfx:[[1.2,'chime']]});
-an('proposal',12,'Napnyugtakor, a vár erkélyén Miska letérdelt. Megmérte Ilona ujját a zsinórral, pontosan ötvenkét milliméter, és gyűrűt kötött belőle. „Igen!” – mondta Ilona.','At sunset, on the castle balcony, Miska knelt. He measured Ilona’s finger with the cord, exactly fifty-two millimetres, and tied it into a ring. “Yes!” said Ilona.',{mood:'love',sfx:[[3.6,'stamp'],[5.4,'chime'],[6.7,'chime']]});
+an('throne',10,'„38,5 °C. Láz, de nem veszélyes” – mondta Miska. A király elmosolyodott. Tényleg ő volt a révész, akit Miska kihúzott a viharos folyóból.','“38.5 °C: a fever, but not a dangerous one,” said Miska. The king smiled. He really was the ferryman Miska had pulled from the stormy river.',{mood:'love'});
+an('throneTwist',12,'Ekkor kivágódott az ajtó. Az őrök behozták a megpörkölődött Hollót és a csontig fagyott Pocokot. Mögöttük Szöcske és Panni lépett be. Szöcske a bátyákra mutatott: „Ők fizettek nekünk!”','Just then the doors burst open. The guards dragged in the singed Raven and the frozen Vole. Behind them came Grasshopper and Panni. Grasshopper pointed at the brothers: “They paid us!”',{mood:'tense',sfx:[[1.4,'crash'],[5.8,'stamp']]});
+an('escape',9,'De a Holló rátaposott az őr lábára, kitépte magát, és kiugrott az ablakon! „Utána!” – kiáltotta Miska.','But the Raven stamped on the guard’s foot, tore himself free and leapt out of the window! “After him!” shouted Miska.',{mood:'action',lb:1,sfx:[[.9,'boing'],[2.7,'crash'],[3.4,'whoosh']]});
+an('wallChase',10,'Végig a vár falán, a lenyugvó nap fényében: elöl a Holló, mögötte Miska. Ilona sem maradt le, pedig Miska kérte, hogy maradjon hátul.','Along the castle walls in the setting sun: the Raven in front, Miska behind. Ilona kept up too, even though Miska begged her to stay back.',{mood:'action',lb:1,sfx:[[.2,'whoosh']]});
+an('lasso',12,'A Holló egy zászló kötelén lendült a mélybe, és lengett, mint egy inga. Miska kivárta a holtpontot, amikor a Holló egy pillanatra megállt a levegőben, és eldobta a zsinórt. Talált! A Holló egyenesen a szökőkútba pottyant.','The Raven swung out on a banner rope, swinging like a pendulum. Miska waited for the turning point, when the Raven hung still in the air for an instant, and threw the cord. A hit! The Raven dropped straight into the fountain.',{mood:'action',lb:1,sfx:[[3,'whoosh'],[4.2,'stamp'],[5.2,'splash'],[7,'boing'],[7.8,'chime']]});
+an('throne',11,'Visszatérve a trónterembe a király ítéletet hirdetett: a Holló, Pocok és a két báty egy évig a vásárbíró mellett mér, pontosan. Szöcske pedig Panni mellett dolgozhat a gyógyító sátorban. Miskához így szólt: „Te nem csaltál, nem hencegtél. Áldásom rátok!”','Back in the throne room the king gave his verdict: the Raven, Vole and the two brothers would spend a year measuring for the market judge, precisely. Grasshopper could work beside Panni in the healer’s tent. And to Miska he said: “You never cheated, you never boasted. You have my blessing!”',{mood:'love',t0:10,sfx:[[1.2,'chime']]});
+an('balconyTalk',11,'Napnyugtakor a vár erkélyén álltak. „Én csak egy szegény fiú vagyok, egy mérőzsinórral” – mondta Miska. „Én pedig csak egy gyógyító lány voltam, amikor megszerettél” – felelte Ilona. „A szívem nem rangot mér.”','At sunset they stood on the castle balcony. “I’m just a poor boy with a measuring cord,” said Miska. “And I was just a healer girl when you fell for me,” Ilona replied. “My heart doesn’t measure rank.”',{mood:'love',sfx:[[9.5,'chime']]});
+an('proposal',12,'Miska ekkor letérdelt. Megmérte Ilona ujját a zsinórral, pontosan ötvenkét milliméter, és gyűrűt kötött belőle. „Igen!” – mondta Ilona, mielőtt Miska bármit kérdezhetett volna.','Then Miska knelt. He measured Ilona’s finger with the cord, exactly fifty-two millimetres, and tied it into a ring. “Yes!” said Ilona, before he could even ask.',{mood:'love',sfx:[[3.6,'stamp'],[5.4,'chime'],[6.7,'chime']]});
 an('wedding',12,'Hét napig tartott a lakodalom. Szólt a cimbalom, zúgtak a harangok, és tűzijáték virágzott a vár fölött.','The wedding lasted seven days. Cimbaloms played, bells rang, and fireworks bloomed over the castle.',{mood:'wedding',chap:['Lakodalom','The Wedding'],sfx:[[.3,'bell'],[1.4,'bell']]});
-an('dance',10,'Még az öreg órásmester is táncra perdült a tűz és jég kapuőrével. A bátyák és a banda pedig a sarokban álltak, és mindent kétszer mértek.','Even the old clockmaker swept the gatekeeper of fire and ice into a dance. And the brothers and the gang stood in the corner, measuring everything twice.',{mood:'wedding'});
+an('dance',11,'Szöcske Pannival táncolt, az öreg órásmester a tűz és jég kapuőrével. A bátyák, a Holló és Pocok pedig a sarokban álltak, és mindent kétszer mértek.','Grasshopper danced with Panni, and the old clockmaker with the gatekeeper of fire and ice. And the brothers, the Raven and Vole stood in the corner, measuring everything twice.',{mood:'wedding'});
 an('end',9,'Miska és Ilona boldogan éltek, míg meg nem haltak.','Miska and Ilona lived happily ever after.',{mood:'love',sfx:[[3.5,'chime']]});
 an('credits',18,'','',{mood:'wonder'});
-const NARR=/*NARR*/{"d": [[8.93, 11.66], null, [6.46, 7.37], [7.44, 8.02], [12.48, 13.22], [10.46, 11.66], [5.02, 5.4], [6.91, 7.37], [7.9, 9.22], [7.27, 6.14], [8.11, 7.46], [10.87, 9.46], [11.11, 11.52], [6.41, 5.76], [6.19, 5.09], [6.89, 8.21], [10.22, 10.8], [8.71, 7.2], [6.05, 5.71], [6.96, 6.65], [6.38, 6.7], [10.99, 12.58], [13.2, 12.94], [14.47, 14.04], [5.9, 5.78], [6.58, 7.03], [10.49, 10.87], [11.69, 10.37], [4.7, 3.89], [9.31, 9.65], [10.22, 9.46], [9.46, 9.67], [13.51, 12.6], [9.46, 11.95], [6.41, 6.67], [7.99, 7.27], [9.7, 8.78], [13.03, 13.1], [5.86, 5.9], [8.98, 9.0], [10.15, 9.65], [9.24, 9.24], [12.0, 12.17], [7.75, 8.9], [6.55, 6.58], [6.26, 7.1], [4.87, 7.25], [12.58, 13.08], [9.22, 8.5], [7.92, 7.97], [7.8, 7.92], [6.24, 7.08], [8.35, 9.62], [10.03, 11.18], [9.38, 7.75], [7.99, 9.5], [11.28, 13.13], [13.9, 17.18], [15.48, 14.3], [7.73, 9.24], [9.46, 10.73], [11.06, 11.06], [11.18, 11.57], [12.6, 12.14], [15.24, 14.33], [12.74, 13.92], [7.94, 8.57], [9.53, 10.49], [4.22, 3.79], null]}/*END*/;const LEAD=.35;
+const NARR=/*NARR*/{"d": [[9.1, 11.66], null, [6.62, 7.46], [13.58, 14.47], [13.49, 14.59], [10.32, 11.81], [4.92, 5.54], [6.98, 7.2], [8.16, 8.81], [7.32, 6.38], [7.73, 7.66], [10.56, 9.31], [11.47, 11.28], [6.34, 5.86], [6.26, 5.16], [7.08, 8.52], [10.42, 10.85], [9.24, 7.15], [5.98, 5.71], [7.18, 5.93], [6.17, 6.84], [10.66, 12.36], [12.94, 12.96], [14.62, 14.02], [5.98, 5.59], [6.74, 7.25], [10.97, 10.97], [11.38, 10.08], [4.3, 4.22], [9.36, 9.65], [10.42, 9.72], [9.43, 9.7], [11.35, 15.12], [13.18, 13.08], [9.86, 11.64], [6.34, 6.65], [7.49, 7.2], [13.85, 12.6], [13.34, 12.82], [5.78, 5.66], [8.71, 8.83], [11.4, 11.57], [8.35, 9.36], [9.82, 9.41], [17.02, 16.51], [19.08, 18.6], [13.51, 14.95], [7.99, 8.52], [7.13, 6.5], [6.29, 7.32], [5.06, 6.98], [12.36, 12.94], [8.71, 8.38], [7.75, 7.85], [7.63, 7.87], [6.38, 6.53], [8.33, 9.65], [10.32, 10.82], [9.55, 7.82], [8.21, 9.38], [11.64, 13.37], [14.11, 17.66], [15.41, 13.7], [7.37, 9.12], [9.31, 9.98], [10.46, 11.33], [13.22, 13.15], [14.88, 13.44], [9.0, 8.66], [9.62, 11.16], [16.42, 15.74], [19.39, 20.59], [16.06, 15.55], [13.22, 13.2], [7.99, 8.59], [10.97, 12.7], [4.2, 3.77], null]}/*END*/;const LEAD=.35;
 let acc=0;S.forEach((s,i)=>{s.i=i;const nd=NARR.d[i];if(nd)s.dur=Math.max(s.dur,Math.max(nd[0],nd[1])+LEAD+1.1);s.start=acc;acc+=s.dur;s.mem={};if(s.chapter){s.sfx=(s.sfx||[]).concat([[.15,'whoosh']])}});const TOTAL=acc;
 
 /* ---------- rendering ---------- */
@@ -846,13 +969,13 @@ function sched(){const a=AU.ctx;if(!playing){AU.nt=Math.max(AU.nt,a.currentTime+
     AU.nt+=spb;AU.beat++}}
 
 /* ---------- narration ---------- */
-let narr=true,nSrc=null,nKey=null,holdT=0;const NB={};
+let narr=true,nSrc=null,nKey=null,holdT=0,nAnch=null;const NB={};
 const nk=i=>lang+'_'+String(i).padStart(2,'0');
 function loadN(i){if(!AU.ctx||!NARR.d[i])return;const k=nk(i);if(NB[k])return;NB[k]='loading';Promise.resolve().then(()=>{const b64=window.ASSETS.narr[k];if(!b64)throw 0;const bin=atob(b64),u=new Uint8Array(bin.length);for(let j=0;j<bin.length;j++)u[j]=bin.charCodeAt(j);return u.buffer}).then(b=>new Promise((res,rej)=>AU.ctx.decodeAudioData(b,res,rej))).then(buf=>{NB[k]=buf}).catch(()=>{NB[k]='err'})}
-function stopN(){if(nSrc){try{nSrc.stop()}catch(e){}nSrc=null}nKey=null}
+function stopN(){if(nSrc){try{nSrc.stop()}catch(e){}nSrc=null}nKey=null;nAnch=null}
 function narrTick(){if(!AU.ctx)return;for(let j=cur;j<cur+3&&j<S.length;j++)loadN(j);const k=nk(cur),buf=NB[k],id=k+':'+cur;
   const want=playing&&narr&&buf instanceof AudioBuffer&&t>=LEAD&&t<LEAD+buf.duration;
-  if(want&&nKey!==id){stopN();const src=AU.ctx.createBufferSource();src.buffer=buf;src.connect(AU.nbus);src.start(0,Math.max(0,t-LEAD));nSrc=src;nKey=id}
+  if(want&&nKey!==id){stopN();const src=AU.ctx.createBufferSource();src.buffer=buf;src.connect(AU.nbus);src.start(0,Math.max(0,t-LEAD));nSrc=src;nKey=id;nAnch={c:AU.ctx.currentTime,t:t}}
   if(!want&&nSrc)stopN();
   if(AU.mbus)AU.mbus.gain.setTargetAtTime(AU.music?(nSrc?.26:.6):0,AU.ctx.currentTime,.25)}
 function narrPending(){const b=NB[nk(cur)];return narr&&NARR.d[cur]&&(b==='loading'||b===undefined)}
@@ -870,9 +993,9 @@ function ui(){const g=S[cur].start+Math.min(t,S[cur].dur),pc=g/TOTAL*100;fillEl.
   const nd=NARR.d[cur],dl=nd?nd[lang==='hu'?0:1]:0,span=dl?dl*.94:txt.length*.05,n=Math.floor(clamp((t-LEAD+.15)/span,0,1)*txt.length);
   if(n!==subN){subN=n;const esc=x=>x.replace(/&/g,'&amp;').replace(/</g,'&lt;');subEl.innerHTML='<span>'+esc(txt.slice(0,n))+'</span><span class="ghost">'+esc(txt.slice(n))+'</span>'}
   let ci=0;CH.forEach((c,k)=>{if(c.i<=cur)ci=k});if(chapEl.selectedIndex!==ci)chapEl.selectedIndex=ci}
-let last=performance.now();
-function frame(now){const dt=Math.min(.1,(now-last)/1000);last=now;
-  if(playing){const a=t;t+=dt;prevT+=dt;trans+=dt;fireSfx(S[cur],a,t);const sh=S[cur];narrTick();if(t>=sh.dur){if((narrPending()||nSrc)&&holdT<8){holdT+=dt}else if(cur<S.length-1)go(cur+1);else{setPlay(false);t=sh.dur}}dirty=true}
+let last=performance.now(),lastA=-1;
+function frame(now){let dt=Math.min(.1,(now-last)/1000);last=now;if(AU.ctx&&AU.ctx.state==='running'){const ac=AU.ctx.currentTime;if(lastA>=0)dt=clamp(ac-lastA,0,.25);lastA=ac}else lastA=-1;
+  if(playing){const a=t;t+=dt;if(nSrc&&nAnch)t=Math.max(a,nAnch.t+(AU.ctx.currentTime-nAnch.c));dt=t-a;prevT+=dt;trans+=dt;fireSfx(S[cur],a,t);const sh=S[cur];narrTick();if(t>=sh.dur){if((narrPending()||nSrc)&&holdT<8){holdT+=dt}else if(cur<S.length-1)go(cur+1);else{setPlay(false);t=sh.dur}}dirty=true}
   if(dirty){draw();dirty=!!playing}ui();requestAnimationFrame(frame)}
 
 const CH=[];S.forEach(s=>{if(s.chap)CH.push({i:s.i,hu:s.chap[0],en:s.chap[1]});if(s.chapter)CH.push({i:s.i,hu:s.chapter[0]+' '+s.chapter[1],en:s.chapter[0]+' '+s.chapter[2]})});CH.sort((a,b)=>a.i-b.i);
