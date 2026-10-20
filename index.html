@@ -56,7 +56,18 @@ select{height:38px;border-radius:6px;border:1px solid var(--line);background:var
 .scrub .tick{position:absolute;top:5px;width:2px;height:12px;background:var(--muted);opacity:.7}
 .scrub .knob{position:absolute;top:4px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--fg);box-shadow:0 0 0 3px rgba(208,165,82,.35)}
 .note{font-family:var(--ui);font-size:13px;color:var(--muted);margin:0;max-width:72ch;line-height:1.5}
-@media (max-width:560px){.time{min-width:0}.cbtn .lbl{display:none}}
+.prem{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.prem.live{border-color:var(--brass)}
+.prem-head{display:flex;flex-direction:column;gap:2px;min-width:0}
+.prem-tag{font-family:var(--display);font-weight:900;font-size:clamp(20px,3vw,28px);color:var(--brass);letter-spacing:.02em}
+.prem-date{font-family:var(--ui);font-size:14px;color:var(--muted)}
+.prem-count{display:flex;gap:8px}
+.tile{min-width:62px;padding:8px 6px 6px;border:1px solid var(--brass-dim);border-radius:6px;text-align:center;background:var(--bg)}
+.tile b{display:block;font-family:var(--display);font-weight:900;font-size:clamp(22px,3.6vw,32px);color:var(--fg);font-variant-numeric:tabular-nums;line-height:1.05}
+.tile span{font-family:var(--ui);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.prem-sub{margin:0;font-family:var(--body);font-style:italic;font-size:16px;color:var(--fg);flex-basis:100%}
+#confetti{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
+@media (max-width:560px){.time{min-width:0}.cbtn .lbl{display:none}.prem-count{width:100%}.tile{min-width:0;flex:1}}
 [hidden]{display:none!important}
 
 </style>
@@ -71,6 +82,17 @@ select{height:38px;border-radius:6px;border:1px solid var(--line);background:var
       <h1>Mérő Miska<span data-hu="történetei" data-en="and his trials">történetei</span></h1>
     </div>
   </header>
+
+  <section class="prem" id="prem" aria-live="polite">
+    <div class="prem-head"><span class="prem-tag" id="premTag" data-hu="Premier" data-en="Premiere">Premier</span><span class="prem-date" data-hu="2026. október 21., szerda · 20:00 (budapesti idő)" data-en="Wednesday, 21 October 2026 · 8:00 PM (Budapest time)">2026. október 21., szerda · 20:00 (budapesti idő)</span></div>
+    <div class="prem-count" id="premCount">
+      <div class="tile"><b id="cd-d">00</b><span data-hu="nap" data-en="days">nap</span></div>
+      <div class="tile"><b id="cd-h">00</b><span data-hu="óra" data-en="hours">óra</span></div>
+      <div class="tile"><b id="cd-m">00</b><span data-hu="perc" data-en="min">perc</span></div>
+      <div class="tile"><b id="cd-s">00</b><span data-hu="mp" data-en="sec">mp</span></div>
+    </div>
+    <p class="prem-sub" id="premSub" data-hu="Addig nézd meg az előzetest!" data-en="Until then, watch the trailer!">Addig nézd meg az előzetest!</p>
+  </section>
 
   <div class="stage" id="stage">
     <canvas id="scr" width="1280" height="720" aria-label="Film"></canvas>
@@ -97,13 +119,13 @@ select{height:38px;border-radius:6px;border:1px solid var(--line);background:var
       <button class="cbtn" id="bFull" title="Teljes képernyő"><svg viewBox="0 0 24 24"><path d="M4 4h6v2H6v4H4zm10 0h6v6h-2V6h-4zM4 14h2v4h4v2H4zm14 0h2v6h-6v-2h4z"/></svg></button>
     </div>
   </div>
-  <p class="note" data-hu="Kb. 9 perc, hat fejezet. A zene és a hangok a lejátszással indulnak. A narrátor felolvassa a történetet; a Narrátor gombbal kikapcsolható. Szóköz: lejátszás/szünet, nyilak: jelenetváltás." data-en="About 9 minutes, six chapters. Music and sound start with playback. A narrator reads the story aloud; turn it off with the Narrator button. Space: play/pause, arrows: change scene.">Kb. 9 perc, hat fejezet. A zene és a hangok a lejátszással indulnak. A narrátor felolvassa a történetet; a Narrátor gombbal kikapcsolható. Szóköz: lejátszás/szünet, nyilak: jelenetváltás.</p>
+  <p class="note" data-hu="Kb. 16 perc, hat fejezet és egy lakodalom. A zene és a hangok a lejátszással indulnak. A narrátor felolvassa a történetet; a Narrátor gombbal kikapcsolható. Szóköz: lejátszás/szünet, nyilak: jelenetváltás." data-en="About 16 minutes, six chapters and a wedding. Music and sound start with playback. A narrator reads the story aloud; turn it off with the Narrator button. Space: play/pause, arrows: change scene.">Kb. 16 perc, hat fejezet és egy lakodalom. A zene és a hangok a lejátszással indulnak. A narrátor felolvassa a történetet; a Narrátor gombbal kikapcsolható. Szóköz: lejátszás/szünet, nyilak: jelenetváltás.</p>
 </main>
 
 <script src="assets.js"></script>
 <script>
 (function(){
-"use strict";
+"use strict";if(!window.ASSETS){const st=document.getElementById('stage');const m=document.createElement('div');m.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:#f0e4c8;font:16px/1.5 system-ui,sans-serif;background:#120d08';m.innerHTML='<div style="max-width:560px">Nem található az <b>assets.js</b> fájl (képek és narráció).<br>Tedd az index.html mellé, ugyanabba a mappába, pontosan ezen a néven.<br><br><span style="opacity:.7">The <b>assets.js</b> file (images and narration) was not found. Put it in the same folder as index.html, with exactly that name.</span></div>';st.appendChild(m);document.getElementById('bigplay').hidden=true;return}
 const W=1280,H=720,TAU=Math.PI*2;
 const cv=document.getElementById('scr'),ctx=cv.getContext('2d');
 let lang='hu';
@@ -984,9 +1006,9 @@ function narrPending(){const b=NB[nk(cur)];return narr&&NARR.d[cur]&&(b==='loadi
 const subEl=document.getElementById('sub'),fillEl=document.getElementById('fill'),knob=document.getElementById('knob'),timeEl=document.getElementById('time'),chapEl=document.getElementById('chap'),bigplay=document.getElementById('bigplay');
 let subShown=-1,subLang='',subN=-1;
 function go(i){if(i<0||i>=S.length)return;stopN();prev=cur;prevT=t;cur=i;t=0;trans=0;holdT=0;S[i].mem={};AU.next=S[i].mood||AU.next;dirty=true}
-function seek(i,tt=0){stopN();cur=clamp(i,0,S.length-1);t=tt;prev=-1;trans=99;holdT=0;S[cur].mem={};AU.next=S[cur].mood||AU.next;subShown=-1;dirty=true}
+function seek(i,tt=0){if(mode!=='film')return;stopN();cur=clamp(i,0,S.length-1);t=tt;prev=-1;trans=99;holdT=0;S[cur].mem={};AU.next=S[cur].mood||AU.next;subShown=-1;dirty=true}
 function fireSfx(sh,a,b){(sh.sfx||[]).forEach(([tt,n])=>{if(tt>a&&tt<=b)emit(n)})}
-function setPlay(p){playing=p;document.getElementById('playIcon').innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4.5v15l13-7.5z"/>';bigplay.hidden=p||started;if(p){audioInit();if(!started){started=true;seek(0,0)}}else{stopN();if(SIL)try{SIL.pause()}catch(e){}}dirty=true}
+function setPlay(p){playing=p;document.getElementById('playIcon').innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4.5v15l13-7.5z"/>';bigplay.hidden=p||started;if(p){audioInit();if(!started&&mode==='film'){started=true;seek(0,0)}}else{stopN();if(SIL)try{SIL.pause()}catch(e){}}dirty=true}
 function fmt(s){s=Math.max(0,Math.floor(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 function ui(){const g=S[cur].start+Math.min(t,S[cur].dur),pc=g/TOTAL*100;fillEl.style.width=pc+'%';knob.style.left=pc+'%';timeEl.textContent=fmt(g)+' / '+fmt(TOTAL);
   const sh=S[cur],txt=(started&&(lang==='hu'?sh.hu:sh.en))||'';if(subShown!==cur||subLang!==lang){subShown=cur;subLang=lang;subN=-1}
@@ -995,27 +1017,84 @@ function ui(){const g=S[cur].start+Math.min(t,S[cur].dur),pc=g/TOTAL*100;fillEl.
   let ci=0;CH.forEach((c,k)=>{if(c.i<=cur)ci=k});if(chapEl.selectedIndex!==ci)chapEl.selectedIndex=ci}
 let last=performance.now(),lastA=-1;
 function frame(now){let dt=Math.min(.1,(now-last)/1000);last=now;if(AU.ctx&&AU.ctx.state==='running'){const ac=AU.ctx.currentTime;if(lastA>=0)dt=clamp(ac-lastA,0,.25);lastA=ac}else lastA=-1;
+  if(mode!=='film'){trailerStep(dt);checkPremiere();requestAnimationFrame(frame);return}
   if(playing){const a=t;t+=dt;if(nSrc&&nAnch)t=Math.max(a,nAnch.t+(AU.ctx.currentTime-nAnch.c));dt=t-a;prevT+=dt;trans+=dt;fireSfx(S[cur],a,t);const sh=S[cur];narrTick();if(t>=sh.dur){if((narrPending()||nSrc)&&holdT<8){holdT+=dt}else if(cur<S.length-1)go(cur+1);else{setPlay(false);t=sh.dur}}dirty=true}
   if(dirty){draw();dirty=!!playing}ui();requestAnimationFrame(frame)}
 
 const CH=[];S.forEach(s=>{if(s.chap)CH.push({i:s.i,hu:s.chap[0],en:s.chap[1]});if(s.chapter)CH.push({i:s.i,hu:s.chapter[0]+' '+s.chapter[1],en:s.chapter[0]+' '+s.chapter[2]})});CH.sort((a,b)=>a.i-b.i);
 function buildChap(){chapEl.innerHTML='';CH.forEach(c=>{const o=document.createElement('option');o.textContent=lang==='hu'?c.hu:c.en;chapEl.appendChild(o)});const tk=document.getElementById('ticks');tk.innerHTML='';CH.forEach(c=>{const d=document.createElement('div');d.className='tick';d.style.left=(S[c.i].start/TOTAL*100)+'%';tk.appendChild(d)})}
-chapEl.addEventListener('change',()=>{const c=CH[chapEl.selectedIndex];if(!started){started=true;bigplay.hidden=true}seek(c.i,0)});
+chapEl.addEventListener('change',()=>{const c=CH[chapEl.selectedIndex];if(mode!=='film')return;if(!started){started=true;bigplay.hidden=true}seek(c.i,0)});
 function applyLang(){document.querySelectorAll('[data-hu]').forEach(e=>e.textContent=e.dataset[lang]);document.getElementById('langLbl').textContent=lang==='hu'?'Magyar':'English';document.getElementById('bLang').setAttribute('aria-pressed',lang==='en');buildChap();stopN();dirty=true;subShown=-1}
 document.getElementById('bLang').onclick=()=>{lang=lang==='hu'?'en':'hu';applyLang()};
 document.getElementById('bPlay').onclick=()=>setPlay(!playing);bigplay.onclick=()=>setPlay(true);
-document.getElementById('bPrev').onclick=()=>{if(!started){started=true;bigplay.hidden=true}seek(t>2?cur:cur-1,0)};
-document.getElementById('bNext').onclick=()=>{if(!started){started=true;bigplay.hidden=true}seek(cur+1,0)};
+document.getElementById('bPrev').onclick=()=>{if(mode!=='film')return;if(!started){started=true;bigplay.hidden=true}seek(t>2?cur:cur-1,0)};
+document.getElementById('bNext').onclick=()=>{if(mode!=='film')return;if(!started){started=true;bigplay.hidden=true}seek(cur+1,0)};
 const tog=(id,fn)=>{const b=document.getElementById(id);b.onclick=()=>{const v=b.getAttribute('aria-pressed')!=='true';b.setAttribute('aria-pressed',v);fn(v)}};
 tog('bMusic',v=>{AU.music=v;if(AU.mbus)AU.mbus.gain.setTargetAtTime(v?.6:0,AU.ctx.currentTime,.1)});
 tog('bSfx',v=>{AU.sfx=v;if(AU.sbus)AU.sbus.gain.setTargetAtTime(v?.8:0,AU.ctx.currentTime,.1)});
 tog('bNarr',v=>{narr=v;if(!v)stopN()});
 const stage=document.getElementById('stage');document.getElementById('bFull').onclick=()=>{try{if(document.fullscreenElement)document.exitFullscreen();else stage.requestFullscreen().catch(()=>{})}catch(e){}};
-const scrub=document.getElementById('scrub');function scrubTo(x){const r=scrub.getBoundingClientRect(),g=clamp((x-r.left)/r.width,0,1)*TOTAL;let i=S.findIndex(s=>g<s.start+s.dur);if(i<0)i=S.length-1;if(!started){started=true;bigplay.hidden=true}seek(i,g-S[i].start)}
+const scrub=document.getElementById('scrub');function scrubTo(x){const r=scrub.getBoundingClientRect(),g=clamp((x-r.left)/r.width,0,1)*TOTAL;let i=S.findIndex(s=>g<s.start+s.dur);if(i<0)i=S.length-1;if(mode!=='film')return;if(!started){started=true;bigplay.hidden=true}seek(i,g-S[i].start)}
 let dragging=false;scrub.addEventListener('pointerdown',e=>{dragging=true;scrub.setPointerCapture(e.pointerId);scrubTo(e.clientX)});scrub.addEventListener('pointermove',e=>{if(dragging)scrubTo(e.clientX)});scrub.addEventListener('pointerup',()=>{dragging=false});
 document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;if(e.code==='Space'){e.preventDefault();setPlay(!playing)}else if(e.code==='ArrowRight'){document.getElementById('bNext').click()}else if(e.code==='ArrowLeft'){document.getElementById('bPrev').click()}});
-stage.addEventListener('click',e=>{if(e.target===cv&&started)setPlay(!playing)});
+stage.addEventListener('click',e=>{if(e.target===cv&&(started||mode!=='film'))setPlay(!playing)});
 buildChap();
+/* ---------- premiere: countdown, trailer, confetti ---------- */
+const PREMIERE=location.hash==='#premier-teszt'?Date.now()+15000:Date.UTC(2026,9,21,18,0,0);
+let mode=(Date.now()>=PREMIERE||location.hash==='#film')?'film':'trailer';
+const sIdx=n=>S.findIndex(s=>s.anim===n);
+const TR=[
+  {a:'coldOpen',t0:3.2,d:4.2,m:'villain'},
+  {c:['Két hencegő báty. Egy erszény arany.','Two boastful brothers. One purse of gold.'],d:2.4,m:'villain'},
+  {a:'ravenWatch',t0:4,d:3,m:'villain'},
+  {c:['És egy fiú, aki mindent megmér.','And one boy who measures everything.'],d:2.4,m:'action'},
+  {a:'bridgeMeasure',t0:1,d:3,m:'action'},
+  {a:'storm1',t0:4.2,d:2.6,m:'storm'},
+  {a:'storm2',t0:2,d:3,m:'storm'},
+  {c:['Egy banda, amely mindent el akar lopni.','A gang that wants to steal it all.'],d:2.4,m:'action'},
+  {a:'theft',t0:3,d:3.4,m:'action'},
+  {a:'chase1',t0:1.5,d:2.6,m:'action'},
+  {a:'chase2',t0:2.4,d:3.6,m:'action'},
+  {a:'romance1',t0:3.6,d:3.2,m:'love'},
+  {c:['És egy szerelem, amit nem lehet lemérni.','And a love no scale can measure.'],d:2.6,m:'love'},
+  {a:'ambush1',t0:3.2,d:2.8,m:'action'},
+  {a:'snore',t0:9.2,d:2.4,m:'action'},
+  {a:'clock',t0:3.8,d:3,m:'action'},
+  {a:'gangPaths',t0:1.6,d:3.2,m:'action'},
+  {a:'escape',t0:1.4,d:2.6,m:'action'},
+  {a:'wallChase',t0:3,d:2.6,m:'action'},
+  {a:'lasso',t0:3.4,d:2.6,m:'action'},
+  {a:'proposal',t0:5.2,d:3,m:'love'},
+  {c:['Előbb mérj, aztán beszélj.','Measure first. Then speak.'],d:2.4,m:'wonder'},
+  {a:'title',t0:3,d:7,m:'wonder',fin:1}];
+let TRT=0;TR.forEach(g=>{g.s=TRT;TRT+=g.d;if(g.a)g.i=sIdx(g.a)});
+let TRt=0,TRk=-1;
+const trAt=x=>{for(let k=TR.length-1;k>=0;k--)if(x>=TR[k].s)return k;return 0};
+const trBuf=document.createElement('canvas');trBuf.width=W;trBuf.height=H;
+function drawTrailer(){const k=trAt(TRt),g=TR[k],lt=TRt-g.s;
+  if(!playing&&TRt===0){renderShot(trBuf.getContext('2d'),sIdx('title'),6);ctx.drawImage(trBuf,0,0);ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);text(ctx,L('ELŐZETES','TRAILER'),W/2,560,26,'#d6ab5a',FU,'center',1,'600');text(ctx,L('Premier: október 21. · 20:00','Premiere: 21 October · 8:00 PM'),W/2,604,30,'#f3e2b6',FD,'center',1,'700')}
+  else if(g.c){ctx.fillStyle='#050302';ctx.fillRect(0,0,W,H);const a=sm(0,.25,lt)*(1-sm(g.d-.3,g.d,lt)),z=lerp(1.12,1,ease(clamp(lt/g.d,0,1)));ctx.save();ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.shadowColor='rgba(214,171,90,.45)';ctx.shadowBlur=24;text(ctx,L(g.c[0],g.c[1]),0,0,54,'#f3e2b6',FD,'center',a,'900');ctx.restore()}
+  else{renderShot(trBuf.getContext('2d'),g.i,g.t0+lt);ctx.drawImage(trBuf,0,0);if(g.fin){const a=sm(1.8,2.6,lt);text(ctx,L('PREMIER','PREMIERE'),W/2,578,24,'#d6ab5a',FU,'center',a,'600');text(ctx,L('2026. október 21. · 20:00','21 October 2026 · 8:00 PM'),W/2,616,34,'#f3e2b6',FD,'center',a,'900')}}
+  ctx.fillStyle='#000';ctx.fillRect(0,0,W,74);ctx.fillRect(0,H-74,W,74);
+  if(playing&&lt<.12&&k>0)flash(ctx,.5*(1-lt/.12));
+  ctx.save();ctx.globalCompositeOperation='overlay';ctx.globalAlpha=.16;ctx.drawImage(PAPER,-(Math.random()*8|0),-(Math.random()*8|0));ctx.restore();ctx.drawImage(VIG,0,0)}
+function trailerStep(dt){if(playing){const a=TRt;TRt+=dt;const k=trAt(TRt);if(k!==TRk){TRk=k;AU.next=TR[k].m;if(TR[k].c)emit('stamp');if(TR[k].a)S[TR[k].i].mem={}}const g=TR[k];if(g.a)fireSfx(S[g.i],g.t0+Math.max(0,a-g.s),g.t0+TRt-g.s);if(TRt>=TRT){setPlay(false);TRt=0;TRk=-1}}
+  drawTrailer();const pc=TRt/TRT*100;fillEl.style.width=pc+'%';knob.style.left=pc+'%';timeEl.textContent=fmt(TRt)+' / '+fmt(TRT);if(subEl.textContent)subEl.textContent=''}
+const premEl=document.getElementById('prem'),cdEls=['cd-d','cd-h','cd-m','cd-s'].map(id=>document.getElementById(id)),bigLbl=bigplay.querySelector('span');
+function setTxt(el,hu,en){el.dataset.hu=hu;el.dataset.en=en;el.textContent=lang==='hu'?hu:en}
+function updCount(){const s=Math.floor(Math.max(0,PREMIERE-Date.now())/1000);[Math.floor(s/86400),Math.floor(s/3600)%24,Math.floor(s/60)%60,s%60].forEach((v,i)=>{const x=String(v).padStart(2,'0');if(cdEls[i].textContent!==x)cdEls[i].textContent=x})}
+function premiereUI(){if(mode==='film'){premEl.classList.add('live');setTxt(document.getElementById('premTag'),'Itt a premier!','The premiere is here!');document.getElementById('premCount').hidden=true;setTxt(document.getElementById('premSub'),'Indítsd el a filmet, és jó szórakozást!','Start the film and enjoy!');setTxt(bigLbl,'Film indítása','Start the film');chapEl.hidden=false}else{setTxt(bigLbl,'Előzetes lejátszása','Play the trailer');chapEl.hidden=true;updCount()}}
+function confetti(){const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,c2=document.createElement('canvas');c2.id='confetti';document.body.appendChild(c2);const g=c2.getContext('2d'),dpr=Math.min(2,window.devicePixelRatio||1);let w,h;const rs=()=>{w=innerWidth;h=innerHeight;c2.width=w*dpr;c2.height=h*dpr;g.setTransform(dpr,0,0,dpr,0,0)};rs();addEventListener('resize',rs);
+  const cols=['#d0a552','#f3e2b6','#c0392b','#2e7a5a','#e8b84a','#9a2232','#f2a6b8'],P=[],N=reduce?60:280;
+  for(let i=0;i<N;i++){const side=i%3,x=side===0?Math.random()*w:side===1?-10:w+10,y=side===0?-20-Math.random()*h*.5:h*.75,ang=side===1?-Math.PI/3-Math.random()*.5:side===2?-2*Math.PI/3+Math.random()*.5:Math.PI/2,v=side===0?1+Math.random()*2:10+Math.random()*8;P.push({x,y,vx:Math.cos(ang)*v+(side===0?(Math.random()-.5)*2:0),vy:Math.sin(ang)*v,r:Math.random()*TAU,vr:(Math.random()-.5)*.3,s:6+Math.random()*7,c:cols[i%cols.length],round:Math.random()<.3})}
+  const t0=performance.now();(function step(n){const el=(n-t0)/1000;g.clearRect(0,0,w,h);P.forEach(p=>{p.vy=Math.min(p.vy+.2,4.5);p.vx*=.985;p.x+=p.vx+Math.sin(el*3+p.r)*.6;p.y+=p.vy;p.r+=p.vr;g.save();g.globalAlpha=clamp(7-el,0,1);g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;if(p.round){g.beginPath();g.arc(0,0,p.s*.45,0,TAU);g.fill()}else g.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);g.restore()});if(el<7.2)requestAnimationFrame(step);else{c2.remove();removeEventListener('resize',rs)}})(t0);
+  try{if(AU.ctx){const tt=AU.ctx.currentTime;[72,76,79,84].forEach((m,i)=>bellN(mf(m),tt+i*.12,.12,AU.sbus))}}catch(e){}}
+function unlock(){mode='film';if(playing)setPlay(false);TRt=0;TRk=-1;started=false;cur=0;t=4.5;prev=-1;trans=99;subShown=-1;bigplay.hidden=false;premiereUI();dirty=true;confetti()}
+function checkPremiere(){if(mode==='trailer'&&Date.now()>=PREMIERE)unlock()}
+setInterval(()=>{if(mode==='trailer'){updCount();checkPremiere()}},250);
+premiereUI();
+if(mode==='film'){let seen=null;try{seen=localStorage.getItem('mm_premiere_confetti')}catch(e){}if(!seen){setTimeout(confetti,600);try{localStorage.setItem('mm_premiere_confetti','1')}catch(e){}}}
+
 Promise.all(['400 40px "Alegreya SC"','900 40px "Alegreya SC"','700 40px "Alegreya SC"','600 24px "Alegreya"','400 24px "Alegreya"','600 20px "Alegreya Sans"'].map(f=>document.fonts.load(f).catch(()=>{}))).then(()=>{dirty=true});
 requestAnimationFrame(frame);
 })();
