@@ -84,7 +84,7 @@ select{height:38px;border-radius:6px;border:1px solid var(--line);background:var
   </header>
 
   <section class="prem" id="prem" aria-live="polite">
-    <div class="prem-head"><span class="prem-tag" id="premTag" data-hu="Premier" data-en="Premiere">Premier</span><span class="prem-date" data-hu="2026. október 21., szerda · 20:00 (budapesti idő)" data-en="Wednesday, 21 October 2026 · 8:00 PM (Budapest time)">2026. október 21., szerda · 20:00 (budapesti idő)</span></div>
+    <div class="prem-head"><span class="prem-tag" id="premTag" data-hu="Premier" data-en="Premiere">Premier</span><span class="prem-date" data-hu="2026. október 22., csütörtök · 11:10 (budapesti idő)" data-en="Thursday, 22 October 2026 · 11:10 AM (Budapest time)">2026. október 22., csütörtök · 11:10 (budapesti idő)</span></div>
     <div class="prem-count" id="premCount">
       <div class="tile"><b id="cd-d">00</b><span data-hu="nap" data-en="days">nap</span></div>
       <div class="tile"><b id="cd-h">00</b><span data-hu="óra" data-en="hours">óra</span></div>
@@ -1040,7 +1040,7 @@ document.addEventListener('keydown',e=>{if(e.target.tagName==='SELECT')return;if
 stage.addEventListener('click',e=>{if(e.target===cv&&(started||mode!=='film'))setPlay(!playing)});
 buildChap();
 /* ---------- premiere: countdown, trailer, confetti ---------- */
-const PREMIERE=location.hash==='#premier-teszt'?Date.now()+15000:Date.UTC(2026,9,21,18,0,0);
+const PREMIERE=location.hash==='#premier-teszt'?Date.now()+15000:Date.UTC(2026,9,22,9,10,0);
 let mode=(Date.now()>=PREMIERE||location.hash==='#film')?'film':'trailer';
 const sIdx=n=>S.findIndex(s=>s.anim===n);
 const TR=[
@@ -1072,9 +1072,9 @@ let TRt=0,TRk=-1;
 const trAt=x=>{for(let k=TR.length-1;k>=0;k--)if(x>=TR[k].s)return k;return 0};
 const trBuf=document.createElement('canvas');trBuf.width=W;trBuf.height=H;
 function drawTrailer(){const k=trAt(TRt),g=TR[k],lt=TRt-g.s;
-  if(!playing&&TRt===0){renderShot(trBuf.getContext('2d'),sIdx('title'),6);ctx.drawImage(trBuf,0,0);ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);text(ctx,L('ELŐZETES','TRAILER'),W/2,560,26,'#d6ab5a',FU,'center',1,'600');text(ctx,L('Premier: október 21. · 20:00','Premiere: 21 October · 8:00 PM'),W/2,604,30,'#f3e2b6',FD,'center',1,'700')}
+  if(!playing&&TRt===0){renderShot(trBuf.getContext('2d'),sIdx('title'),6);ctx.drawImage(trBuf,0,0);ctx.fillStyle='rgba(0,0,0,.35)';ctx.fillRect(0,0,W,H);text(ctx,L('ELŐZETES','TRAILER'),W/2,560,26,'#d6ab5a',FU,'center',1,'600');text(ctx,L('Premier: október 22. · 11:10','Premiere: 22 October · 11:10 AM'),W/2,604,30,'#f3e2b6',FD,'center',1,'700')}
   else if(g.c){ctx.fillStyle='#050302';ctx.fillRect(0,0,W,H);const a=sm(0,.25,lt)*(1-sm(g.d-.3,g.d,lt)),z=lerp(1.12,1,ease(clamp(lt/g.d,0,1)));ctx.save();ctx.translate(W/2,H/2);ctx.scale(z,z);ctx.shadowColor='rgba(214,171,90,.45)';ctx.shadowBlur=24;text(ctx,L(g.c[0],g.c[1]),0,0,54,'#f3e2b6',FD,'center',a,'900');ctx.restore()}
-  else{renderShot(trBuf.getContext('2d'),g.i,g.t0+lt);ctx.drawImage(trBuf,0,0);if(g.fin){const a=sm(1.8,2.6,lt);text(ctx,L('PREMIER','PREMIERE'),W/2,578,24,'#d6ab5a',FU,'center',a,'600');text(ctx,L('2026. október 21. · 20:00','21 October 2026 · 8:00 PM'),W/2,616,34,'#f3e2b6',FD,'center',a,'900')}}
+  else{renderShot(trBuf.getContext('2d'),g.i,g.t0+lt);ctx.drawImage(trBuf,0,0);if(g.fin){const a=sm(1.8,2.6,lt);text(ctx,L('PREMIER','PREMIERE'),W/2,578,24,'#d6ab5a',FU,'center',a,'600');text(ctx,L('2026. október 22. · 11:10','22 October 2026 · 11:10 AM'),W/2,616,34,'#f3e2b6',FD,'center',a,'900')}}
   ctx.fillStyle='#000';ctx.fillRect(0,0,W,74);ctx.fillRect(0,H-74,W,74);
   if(playing&&lt<.12&&k>0)flash(ctx,.5*(1-lt/.12));
   ctx.save();ctx.globalCompositeOperation='overlay';ctx.globalAlpha=.16;ctx.drawImage(PAPER,-(Math.random()*8|0),-(Math.random()*8|0));ctx.restore();ctx.drawImage(VIG,0,0)}
